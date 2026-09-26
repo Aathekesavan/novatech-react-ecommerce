@@ -10,6 +10,15 @@
   --color-brand-light: #eef2ff;
   --color-brand-glow: rgba(79, 70, 229, 0.25);
 
+  /* Semantic Compatibility Tokens */
+  --color-primary: #4f46e5;
+  --color-primary-hover: #4338ca;
+  --color-primary-light: #eef2ff;
+  --color-secondary: #0f172a;
+  --color-secondary-hover: #1e293b;
+  --color-star-gold: #f59e0b;
+  --color-stock-green: #047857;
+
   --color-cyan: #06b6d4;             /* Cyber Cyan Accent */
   --color-cyan-hover: #0891b2;
   --color-cyan-light: #ecfeff;
