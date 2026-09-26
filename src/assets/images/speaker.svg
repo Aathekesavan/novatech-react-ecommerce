@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="100%" height="100%">
+  <defs>
+    <linearGradient id="speaker-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <filter id="spk-shadow">
+      <feDropShadow dx="0" dy="10" stdDeviation="8" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  <rect width="300" height="300" rx="20" fill="#f1f5f9"/>
+  <g filter="url(#spk-shadow)">
+    <!-- Speaker Body -->
+    <rect x="90" y="60" width="120" height="180" rx="26" fill="url(#speaker-grad)"/>
+    <!-- Top Driver -->
+    <circle cx="150" cy="115" r="32" fill="#334155"/>
+    <circle cx="150" cy="115" r="22" fill="#020617"/>
+    <circle cx="150" cy="115" r="10" fill="#2563eb"/>
+    <!-- Bottom Woofer -->
+    <circle cx="150" cy="185" r="26" fill="#334155"/>
+    <circle cx="150" cy="185" r="16" fill="#020617"/>
+    <!-- Volume controls top -->
+    <circle cx="130" cy="74" r="3" fill="#64748b"/>
+    <circle cx="150" cy="74" r="3" fill="#64748b"/>
+    <circle cx="170" cy="74" r="3" fill="#64748b"/>
+  </g>
+</svg>
