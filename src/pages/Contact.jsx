@@ -24,7 +24,7 @@ export default function Contact() {
     },
     {
       question: 'What are the shipping delivery speeds and thresholds?',
-      answer: 'We offer complimentary 2–3 business day Express Delivery on all orders exceeding $50 within the contiguous United States. International shipments typically take 4–7 business days with customs clearance prepaid.'
+      answer: 'We offer complimentary 2–3 business day Express Delivery on all orders exceeding ₹999 across India. Express air shipments typically take 24–48 hours to all major metro cities with live tracking updates.'
     },
     {
       question: 'How do I process a return or exchange within 30 days?',

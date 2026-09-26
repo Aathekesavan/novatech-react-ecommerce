@@ -212,11 +212,11 @@ export default function Cart({ setActivePage }) {
                   {/* Line Price */}
                   <div style={{ textAlign: 'right' }}>
                     <div style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0f1111' }}>
-                      ${(item.price * item.quantity).toFixed(2)}
+                      ₹{(item.price * item.quantity).toLocaleString('en-IN')}
                     </div>
                     {item.quantity > 1 && (
                       <div style={{ fontSize: '0.75rem', color: '#565959' }}>
-                        (${item.price.toFixed(2)} each)
+                        (₹{item.price.toLocaleString('en-IN')} each)
                       </div>
                     )}
                   </div>
@@ -227,7 +227,7 @@ export default function Cart({ setActivePage }) {
             {/* Bottom Subtotal */}
             <div style={{ textAlign: 'right', marginTop: '16px', fontSize: '1.15rem' }}>
               Subtotal ({cart.reduce((sum, item) => sum + item.quantity, 0)} items):{' '}
-              <strong style={{ fontWeight: 700, color: '#0f1111' }}>${subtotal.toFixed(2)}</strong>
+              <strong style={{ fontWeight: 700, color: '#0f1111' }}>₹{subtotal.toLocaleString('en-IN')}</strong>
             </div>
           </div>
 
@@ -242,7 +242,7 @@ export default function Cart({ setActivePage }) {
             {/* Subtotal */}
             <div style={{ fontSize: '1.2rem', marginBottom: '12px' }}>
               Subtotal ({cart.reduce((sum, item) => sum + item.quantity, 0)} items):{' '}
-              <strong style={{ fontWeight: 700, color: '#0f1111' }}>${subtotal.toFixed(2)}</strong>
+              <strong style={{ fontWeight: 700, color: '#0f1111' }}>₹{subtotal.toLocaleString('en-IN')}</strong>
             </div>
 
             {/* Promo Code Box */}
@@ -279,27 +279,27 @@ export default function Cart({ setActivePage }) {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.85rem', marginBottom: '16px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', color: '#565959' }}>
                 <span>Items Subtotal:</span>
-                <span>${subtotal.toFixed(2)}</span>
+                <span>₹{subtotal.toLocaleString('en-IN')}</span>
               </div>
               {discountAmount > 0 && (
                 <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--color-deal-red)', fontWeight: 600 }}>
                   <span>Discount Savings:</span>
-                  <span>-${discountAmount.toFixed(2)}</span>
+                  <span>-₹{discountAmount.toLocaleString('en-IN')}</span>
                 </div>
               )}
               <div style={{ display: 'flex', justifyContent: 'space-between', color: '#565959' }}>
-                <span>Estimated Tax (8%):</span>
-                <span>${tax.toFixed(2)}</span>
+                <span>Estimated GST (18%):</span>
+                <span>₹{tax.toLocaleString('en-IN')}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', color: '#565959' }}>
                 <span>Shipping & Handling:</span>
                 <span style={{ color: 'var(--color-stock-green)', fontWeight: 600 }}>
-                  {shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`}
+                  {shipping === 0 ? 'FREE' : `₹${shipping.toLocaleString('en-IN')}`}
                 </span>
               </div>
               <div style={{ borderTop: '1px solid #d5d9d9', paddingTop: '8px', display: 'flex', justifyContent: 'space-between', fontSize: '1.15rem', fontWeight: 700, color: 'var(--color-deal-red)' }}>
                 <span>Order Total:</span>
-                <span>${total.toFixed(2)}</span>
+                <span>₹{total.toLocaleString('en-IN')}</span>
               </div>
             </div>
 
@@ -528,7 +528,7 @@ export default function Cart({ setActivePage }) {
                 <div style={{ borderTop: '1px solid #e7e7e7', paddingTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div>
                     <span style={{ fontSize: '0.8rem', color: '#565959' }}>Order Total: </span>
-                    <strong style={{ fontSize: '1.25rem', color: 'var(--color-deal-red)' }}>${total.toFixed(2)}</strong>
+                    <strong style={{ fontSize: '1.25rem', color: 'var(--color-deal-red)' }}>₹{total.toLocaleString('en-IN')}</strong>
                   </div>
                   <button type="submit" className="btn btn-orange btn-lg">
                     Place Your Order

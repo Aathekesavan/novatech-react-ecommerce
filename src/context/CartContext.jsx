@@ -20,7 +20,7 @@ export function CartProvider({ children }) {
         id: 'prod-1',
         name: 'NovaPro Wireless Studio ANC Headphones',
         sku: 'NVP-920-BLK',
-        price: 249.00,
+        price: 19999,
         image: PRODUCTS[0].image,
         color: 'Matte Obsidian',
         quantity: 1
@@ -29,7 +29,7 @@ export function CartProvider({ children }) {
         id: 'prod-2',
         name: 'Aether Pulse Smart AMOLED Watch',
         sku: 'AET-510-SLT',
-        price: 189.99,
+        price: 14999,
         image: PRODUCTS[1].image,
         color: 'Slate Black',
         quantity: 1
@@ -131,13 +131,13 @@ export function CartProvider({ children }) {
     }
   };
 
-  // Calculations
+  // Calculations in INR
   const totalItemsCount = cart.reduce((acc, item) => acc + item.quantity, 0);
   const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-  const discountAmount = couponApplied ? subtotal * discountPercent : 0;
+  const discountAmount = couponApplied ? Math.round(subtotal * discountPercent) : 0;
   const taxableSubtotal = Math.max(0, subtotal - discountAmount);
-  const tax = taxableSubtotal * 0.08; // 8% sales tax
-  const shipping = subtotal > 50 || subtotal === 0 ? 0.00 : 9.99;
+  const tax = Math.round(taxableSubtotal * 0.18); // 18% GST (Standard in India)
+  const shipping = subtotal > 999 || subtotal === 0 ? 0 : 99; // Free above ₹999
   const total = taxableSubtotal + tax + shipping;
 
   return (

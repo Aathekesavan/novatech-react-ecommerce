@@ -108,13 +108,13 @@ export default function ProductDetail({ productId = 'prod-1', setActivePage, onS
                 </span>
               )}
               <span style={{ fontSize: '1.85rem', fontWeight: 700, color: '#0f1111' }}>
-                <span style={{ fontSize: '0.65em', verticalAlign: 'top' }}>$</span>
-                {product.price.toFixed(2)}
+                <span style={{ fontSize: '0.65em', verticalAlign: 'top' }}>₹</span>
+                {product.price.toLocaleString('en-IN')}
               </span>
             </div>
             {product.originalPrice && (
               <div style={{ fontSize: '0.85rem', color: '#565959', marginTop: '2px' }}>
-                Typical price: <span style={{ textDecoration: 'line-through' }}>${product.originalPrice.toFixed(2)}</span>
+                Typical price: <span style={{ textDecoration: 'line-through' }}>₹{product.originalPrice.toLocaleString('en-IN')}</span>
               </div>
             )}
             <div style={{ fontSize: '0.8rem', color: '#565959', marginTop: '4px' }}>
@@ -128,9 +128,9 @@ export default function ProductDetail({ productId = 'prod-1', setActivePage, onS
               <span>🏷️</span> Bank Offers & Partner Discounts
             </div>
             <div className="bank-offers-text">
-              <strong>10% Instant Discount</strong> up to $150 on HDFC / ICICI Bank Credit Cards.
+              <strong>10% Instant Discount</strong> up to ₹1,500 on HDFC / ICICI Bank Credit Cards.
               <br />
-              <strong>No-Cost EMI:</strong> Avail No Cost EMI on select cards for orders above $200.
+              <strong>No-Cost EMI:</strong> Avail No Cost EMI on select cards for orders above ₹5,000.
             </div>
           </div>
 
@@ -183,7 +183,7 @@ export default function ProductDetail({ productId = 'prod-1', setActivePage, onS
         <div>
           <div className="sticky-buy-box">
             <div className="buy-box-price">
-              ${(product.price * quantity).toFixed(2)}
+              ₹{(product.price * quantity).toLocaleString('en-IN')}
             </div>
 
             <div className="buy-box-delivery">

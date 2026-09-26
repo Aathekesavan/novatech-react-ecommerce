@@ -68,13 +68,13 @@ export default function ProductCard({ product, onSelectProduct }) {
         {/* Price Row (Amazon / Flipkart Style) */}
         <div className="product-card-price-row">
           <span className="product-price-current">
-            <span className="currency-symbol">$</span>
-            {product.price.toFixed(2)}
+            <span className="currency-symbol">₹</span>
+            {product.price.toLocaleString('en-IN')}
           </span>
           {product.originalPrice && (
             <>
               <span className="product-price-original">
-                ${product.originalPrice.toFixed(2)}
+                ₹{product.originalPrice.toLocaleString('en-IN')}
               </span>
               <span className="badge-discount-tag">
                 {discountPercent}% off

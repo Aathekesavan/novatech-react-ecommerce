@@ -11,7 +11,7 @@ export default function Products({
   setSelectedCategory
 }) {
   const { showToast } = useCart();
-  const [maxPrice, setMaxPrice] = useState(2000);
+  const [maxPrice, setMaxPrice] = useState(100000);
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [minRating, setMinRating] = useState(0);
   const [inStockOnly, setInStockOnly] = useState(false);
@@ -25,7 +25,7 @@ export default function Products({
 
   const handleResetFilters = () => {
     if (setSelectedCategory) setSelectedCategory('all');
-    setMaxPrice(2000);
+    setMaxPrice(100000);
     setSelectedBrands([]);
     setMinRating(0);
     setInStockOnly(false);
@@ -182,14 +182,14 @@ export default function Products({
           <div className="filter-group">
             <div className="filter-title">Price Range</div>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '6px', color: '#565959' }}>
-              <span>$50</span>
-              <strong style={{ color: '#0f1111' }}>Up to ${maxPrice}</strong>
+              <span>₹2,000</span>
+              <strong style={{ color: '#0f1111' }}>Up to ₹{maxPrice.toLocaleString('en-IN')}</strong>
             </div>
             <input
               type="range"
-              min="50"
-              max="2000"
-              step="50"
+              min="2000"
+              max="100000"
+              step="1000"
               value={maxPrice}
               onChange={(e) => setMaxPrice(Number(e.target.value))}
               style={{ width: '100%', accentColor: 'var(--color-cta-orange)', cursor: 'pointer' }}

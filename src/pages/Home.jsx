@@ -235,7 +235,7 @@ export default function Home({ setActivePage, onSelectProduct, setSelectedCatego
               <div style={{ background: '#f7fafa', border: '1px solid #d5d9d9', borderRadius: '4px', padding: '10px' }}>
                 <strong style={{ color: '#0f1111', fontSize: '0.85rem' }}>🏷 HDFC / ICICI Bank Cards</strong>
                 <p style={{ margin: '4px 0 0', fontSize: '0.75rem', color: '#565959' }}>
-                  10% Instant Discount up to $150 on minimum cart value of $200.
+                  10% Instant Discount up to ₹1,500 on minimum cart value of ₹5,000.
                 </p>
               </div>
               <div style={{ background: '#f7fafa', border: '1px solid #d5d9d9', borderRadius: '4px', padding: '10px' }}>
@@ -295,7 +295,7 @@ export default function Home({ setActivePage, onSelectProduct, setSelectedCatego
             <span className="trust-icon">🚚</span>
             <div>
               <div className="trust-title">Free & Fast Delivery</div>
-              <p className="trust-desc">Complimentary shipping on orders above $50</p>
+              <p className="trust-desc">Complimentary shipping on orders above ₹999</p>
             </div>
           </div>
           <div className="trust-item">
