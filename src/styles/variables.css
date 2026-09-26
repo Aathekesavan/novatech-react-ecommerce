@@ -1,47 +1,67 @@
 /* ==========================================================================
-   NovaTech E-Commerce Design System - CSS Variables & Tokens
-   Course: Full Stack Development (Task 1: HTML5 & CSS3 Responsive Design)
+   NovaTech E-Commerce Design System - Amazon & Flipkart Inspired Tokens
    ========================================================================== */
 
 :root {
-  /* Brand Color Palette */
-  --color-primary: #2563eb;          /* Vibrant Tech Blue */
-  --color-primary-hover: #1d4ed8;    /* Darker Blue */
-  --color-primary-light: #eff6ff;    /* Soft Ice Blue */
-  --color-secondary: #0f172a;        /* Deep Slate Navy */
-  --color-secondary-hover: #1e293b;  /* Slate Hover */
-  --color-accent: #f59e0b;           /* Warm Amber / Star Rating */
-  --color-accent-hover: #d97706;
-  --color-success: #10b981;          /* Emerald Green */
-  --color-danger: #ef4444;           /* Coral Red / Discount Badge */
-  --color-warning: #f97316;          /* Orange */
+  /* E-Commerce Marketplace Brand Palette */
+  --color-nav-bg: #131921;           /* Amazon Signature Charcoal/Navy */
+  --color-nav-text: #ffffff;
+  --color-subnav-bg: #232f3e;        /* Secondary Dark Slate Nav */
+  --color-subnav-text: #ffffff;
+  
+  --color-primary: #2874f0;          /* Flipkart Royal Tech Blue */
+  --color-primary-hover: #125cdb;
+  --color-primary-light: #e8f2fe;
+
+  /* Call-to-Action Buttons (Amazon / Flipkart Standard) */
+  --color-cta-yellow: #ffd814;       /* Amazon Primary Add to Cart */
+  --color-cta-yellow-hover: #f7ca00;
+  --color-cta-yellow-border: #fcd200;
+  
+  --color-cta-orange: #ffa41c;       /* Amazon Buy Now / Flipkart Orange */
+  --color-cta-orange-hover: #fa8900;
+  --color-cta-orange-border: #ff8f00;
+
+  --color-search-btn: #febd69;       /* Amazon Amber Search Button */
+  --color-search-btn-hover: #f3a847;
+
+  /* Badges & Trust Accents */
+  --color-choice-bg: #232f3e;        /* "NovaTech's Choice" Dark Badge */
+  --color-choice-accent: #f08804;
+  --color-deal-red: #cc0c39;         /* Deal of the Day Red */
+  --color-deal-bg: #ffe4e6;
+  --color-prime-blue: #00a8e1;       /* Express / Assured Delivery */
+  --color-stock-green: #007600;      /* In Stock Green */
+  --color-discount-green: #388e3c;   /* 25% Off Green Tag */
+  --color-star-gold: #ffa41c;        /* Customer Review Stars */
 
   /* Neutral Surface & Background Colors */
-  --color-bg-main: #f8fafc;          /* Off-white canvas */
-  --color-bg-surface: #ffffff;       /* Pure white cards */
-  --color-bg-subtle: #f1f5f9;        /* Light grey borders/dividers */
-  --color-border: #e2e8f0;           /* Subtle border */
-  --color-border-hover: #cbd5e1;
+  --color-bg-main: #eaeded;          /* Authentic Marketplace Canvas */
+  --color-bg-surface: #ffffff;       /* Pure White Product Cards */
+  --color-bg-subtle: #f7fafa;
+  --color-border: #d5d9d9;           /* Clean product card borders */
+  --color-border-hover: #888c8c;
 
   /* Typography Colors */
-  --color-text-main: #0f172a;        /* High contrast primary text */
-  --color-text-muted: #64748b;       /* Secondary neutral text */
-  --color-text-light: #94a3b8;       /* Subtle hints / placeholders */
-  --color-text-inverse: #ffffff;     /* White text on dark bg */
+  --color-text-main: #0f1111;        /* High-contrast commercial dark */
+  --color-text-muted: #565959;       /* Secondary neutral text */
+  --color-text-light: #767676;
+  --color-link: #007185;             /* Amazon Blue Hyperlink */
+  --color-link-hover: #c7511f;       /* Orange-brown hover */
 
   /* Typography System */
-  --font-family-base: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  --font-family-heading: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-family-base: "Ember", "Amazon Ember", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-family-heading: "Amazon Ember", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   
   --font-size-xs: 0.75rem;    /* 12px */
-  --font-size-sm: 0.875rem;   /* 14px */
-  --font-size-base: 1rem;     /* 16px */
+  --font-size-sm: 0.8125rem;  /* 13px */
+  --font-size-base: 0.875rem; /* 14px */
+  --font-size-md: 1rem;       /* 16px */
   --font-size-lg: 1.125rem;   /* 18px */
   --font-size-xl: 1.25rem;    /* 20px */
   --font-size-2xl: 1.5rem;    /* 24px */
-  --font-size-3xl: 1.875rem;  /* 30px */
+  --font-size-3xl: 1.75rem;   /* 28px */
   --font-size-4xl: 2.25rem;   /* 36px */
-  --font-size-5xl: 3rem;      /* 48px */
 
   --font-weight-normal: 400;
   --font-weight-medium: 500;
@@ -50,36 +70,27 @@
   --font-weight-black: 800;
 
   /* Spacing System */
-  --space-1: 0.25rem;  /* 4px */
-  --space-2: 0.5rem;   /* 8px */
-  --space-3: 0.75rem;  /* 12px */
-  --space-4: 1rem;     /* 16px */
-  --space-5: 1.25rem;  /* 20px */
-  --space-6: 1.5rem;   /* 24px */
-  --space-8: 2rem;     /* 32px */
-  --space-10: 2.5rem;  /* 40px */
-  --space-12: 3rem;    /* 48px */
-  --space-16: 4rem;    /* 64px */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
 
   /* Border Radii */
+  --radius-xs: 2px;
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
-  --radius-xl: 16px;
   --radius-full: 9999px;
 
   /* Box Shadows */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
-
-  /* Transitions */
-  --transition-fast: 150ms ease;
-  --transition-base: 250ms ease;
-  --transition-slow: 350ms ease;
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-hover: 0 8px 16px -2px rgba(0, 0, 0, 0.12), 0 4px 6px -2px rgba(0, 0, 0, 0.06);
+  --shadow-modal: 0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
 
   /* Layout Containers */
-  --container-max-width: 1240px;
-  --header-height: 72px;
+  --container-max-width: 1440px;
 }

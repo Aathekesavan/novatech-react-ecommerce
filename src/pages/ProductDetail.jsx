@@ -7,282 +7,362 @@ import { useCart } from '../context/CartContext';
 export default function ProductDetail({ productId = 'prod-1', setActivePage, onSelectProduct }) {
   const { addToCart } = useCart();
   
-  const product = PRODUCTS.find(p => p.id === productId) || PRODUCTS[0];
+  const product = PRODUCTS.find((p) => p.id === productId) || PRODUCTS[0];
 
   const [selectedImage, setSelectedImage] = useState(product.image);
   const [selectedColor, setSelectedColor] = useState(product.colors?.[0] || 'Standard');
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('specs');
+  const [deliveryPincode, setDeliveryPincode] = useState('600001');
 
-  // Sync state if productId changes
   useEffect(() => {
     setSelectedImage(product.image);
     setSelectedColor(product.colors?.[0] || 'Standard');
     setQuantity(1);
   }, [productId]);
 
+  const discountPercent = product.originalPrice
+    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+    : 0;
+
   const handleBuyNow = () => {
     addToCart(product, quantity, selectedColor);
     setActivePage('cart');
   };
 
-  const relatedProducts = PRODUCTS.filter(p => p.id !== product.id).slice(0, 3);
+  const relatedProducts = PRODUCTS.filter((p) => p.id !== product.id).slice(0, 4);
 
   return (
-    <div className="container section" style={{ paddingTop: 'var(--space-6)' }}>
-      {/* Breadcrumb */}
-      <nav className="breadcrumb" aria-label="Breadcrumb navigation">
-        <span className="breadcrumb-item">
-          <a href="#home" onClick={(e) => { e.preventDefault(); setActivePage('home'); }}>Home</a>
-        </span>
-        <span className="breadcrumb-separator">/</span>
-        <span className="breadcrumb-item">
-          <a href="#products" onClick={(e) => { e.preventDefault(); setActivePage('products'); }}>{product.categoryLabel}</a>
-        </span>
-        <span className="breadcrumb-separator">/</span>
-        <span className="breadcrumb-item active" aria-current="page">{product.name}</span>
+    <div className="container" style={{ paddingTop: '16px', paddingBottom: '40px' }}>
+      {/* Amazon Breadcrumb */}
+      <nav style={{ fontSize: '0.8rem', color: '#565959', marginBottom: '16px' }} aria-label="Breadcrumb">
+        <a href="#home" onClick={(e) => { e.preventDefault(); setActivePage('home'); }} style={{ color: 'var(--color-link)' }}>Electronics</a>
+        <span style={{ margin: '0 6px' }}>&rsaquo;</span>
+        <a href="#products" onClick={(e) => { e.preventDefault(); setActivePage('products'); }} style={{ color: 'var(--color-link)' }}>{product.categoryLabel}</a>
+        <span style={{ margin: '0 6px' }}>&rsaquo;</span>
+        <span style={{ color: '#0f1111' }}>{product.name}</span>
       </nav>
 
-      {/* Main Product Layout */}
-      <div className="product-detail-layout">
-        {/* Left Column: Gallery */}
-        <div className="gallery-container">
-          <div className="main-preview-img-box">
-            <img
-              src={selectedImage}
-              alt={product.name}
-              className="main-preview-img"
-            />
-          </div>
-
-          <div className="thumbnails-strip" role="group" aria-label="Product thumbnails">
+      {/* Amazon 3-Column Product Detail Layout */}
+      <div className="detail-layout-amazon">
+        {/* Column 1: Gallery */}
+        <div className="detail-gallery-col">
+          <div className="detail-thumbs-list">
             {product.thumbnails?.map((thumb, idx) => (
               <button
                 key={idx}
-                className={`thumbnail-btn ${selectedImage === thumb ? 'active' : ''}`}
+                type="button"
+                className={`detail-thumb-btn ${selectedImage === thumb ? 'active' : ''}`}
                 onClick={() => setSelectedImage(thumb)}
-                aria-label={`View thumbnail ${idx + 1}`}
+                aria-label={`View angle ${idx + 1}`}
               >
-                <img src={thumb} alt={`View ${idx + 1}`} />
+                <img src={thumb} alt="" className="detail-thumb-img" />
               </button>
             ))}
           </div>
+
+          <div className="detail-main-img-box">
+            <img
+              src={selectedImage}
+              alt={product.name}
+              className="detail-main-img"
+            />
+          </div>
         </div>
 
-        {/* Right Column: Info & Actions */}
-        <div className="product-detail-info">
-          <div>
-            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
-              {product.badge && (
-                <span className="badge badge-sale">{product.badgeText}</span>
+        {/* Column 2: Product Information & Specifications */}
+        <div className="detail-center-col">
+          <a
+            href="#products"
+            className="detail-brand-link"
+            onClick={(e) => { e.preventDefault(); setActivePage('products'); }}
+          >
+            Visit the {product.brand || 'NovaTech'} Store
+          </a>
+
+          <h1 className="detail-title">{product.name}</h1>
+
+          {/* Star Ratings + Review Count */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+            <StarRating rating={product.rating} reviewsCount={product.reviewsCount} />
+            <span style={{ color: '#007185', fontSize: '0.85rem' }}>| 124 answered questions</span>
+          </div>
+
+          {/* Badge */}
+          {product.badge && (
+            <div style={{ marginBottom: '12px' }}>
+              <span className="badge badge-choice">
+                Nova<span className="badge-accent">Choice</span> for "{product.categoryLabel}"
+              </span>
+            </div>
+          )}
+
+          <hr style={{ border: 'none', borderTop: '1px solid #e7e7e7', margin: '8px 0 16px' }} />
+
+          {/* Price Box */}
+          <div style={{ marginBottom: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+              {discountPercent > 0 && (
+                <span style={{ color: 'var(--color-deal-red)', fontSize: '1.75rem', fontWeight: 300 }}>
+                  -{discountPercent}%
+                </span>
               )}
-              <span className="badge badge-success">
-                {product.inStock ? 'In Stock • Ships in 24h' : 'Backorder'}
+              <span style={{ fontSize: '1.85rem', fontWeight: 700, color: '#0f1111' }}>
+                <span style={{ fontSize: '0.65em', verticalAlign: 'top' }}>$</span>
+                {product.price.toFixed(2)}
               </span>
             </div>
-
-            <h1 className="product-detail-title">{product.name}</h1>
-
-            <div className="rating">
-              <StarRating rating={product.rating} reviewsCount={product.reviewsCount} />
-              <span style={{ color: 'var(--color-text-light)', margin: '0 0.5rem' }}>|</span>
-              <span style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>
-                SKU: {product.sku}
-              </span>
+            {product.originalPrice && (
+              <div style={{ fontSize: '0.85rem', color: '#565959', marginTop: '2px' }}>
+                Typical price: <span style={{ textDecoration: 'line-through' }}>${product.originalPrice.toFixed(2)}</span>
+              </div>
+            )}
+            <div style={{ fontSize: '0.8rem', color: '#565959', marginTop: '4px' }}>
+              Inclusive of all taxes. Free shipping on this item.
             </div>
           </div>
 
-          <div className="product-detail-price-box">
-            <span className="product-detail-current-price">${product.price.toFixed(2)}</span>
-            {product.originalPrice && (
-              <span style={{ fontSize: '1.25rem', color: 'var(--color-text-light)', textDecoration: 'line-through' }}>
-                ${product.originalPrice.toFixed(2)}
-              </span>
-            )}
-            {product.originalPrice && (
-              <span className="badge badge-sale" style={{ fontSize: '0.85rem' }}>
-                Save ${(product.originalPrice - product.price).toFixed(2)}
-              </span>
-            )}
+          {/* Bank Offers Callout Box (Real Amazon Style) */}
+          <div className="bank-offers-box">
+            <div className="bank-offers-title">
+              <span>🏷️</span> Bank Offers & Partner Discounts
+            </div>
+            <div className="bank-offers-text">
+              <strong>10% Instant Discount</strong> up to $150 on HDFC / ICICI Bank Credit Cards.
+              <br />
+              <strong>No-Cost EMI:</strong> Avail No Cost EMI on select cards for orders above $200.
+            </div>
           </div>
 
-          <p style={{ fontSize: '1rem', color: 'var(--color-text-muted)' }}>
-            {product.description}
-          </p>
-
-          {/* Color Selector */}
-          {product.colors && product.colors.length > 0 && (
-            <div>
-              <label style={{ display: 'block', fontWeight: 600, fontSize: '0.875rem', marginBottom: '0.5rem' }}>
-                Selected Finish: <strong style={{ color: 'var(--color-primary)' }}>{selectedColor}</strong>
-              </label>
-              <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                {product.colors.map(color => (
+          {/* Color Finish Picker */}
+          {product.colors && (
+            <div style={{ marginBottom: '20px' }}>
+              <div style={{ fontSize: '0.85rem', fontWeight: 600, marginBottom: '8px', color: '#0f1111' }}>
+                Color Finish: <span style={{ fontWeight: 400, color: '#565959' }}>{selectedColor}</span>
+              </div>
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                {product.colors.map((color) => (
                   <button
                     key={color}
                     type="button"
                     onClick={() => setSelectedColor(color)}
                     style={{
-                      border: selectedColor === color ? '2px solid var(--color-primary)' : '1.5px solid var(--color-border)',
-                      padding: '0.5rem 1rem',
-                      borderRadius: '6px',
-                      fontWeight: selectedColor === color ? 600 : 400,
+                      padding: '6px 14px',
+                      borderRadius: '4px',
+                      border: selectedColor === color ? '2px solid var(--color-cta-orange)' : '1px solid #d5d9d9',
+                      backgroundColor: selectedColor === color ? '#fff8f0' : '#ffffff',
                       fontSize: '0.85rem',
-                      backgroundColor: selectedColor === color ? 'var(--color-primary-light)' : '#ffffff',
-                      color: selectedColor === color ? 'var(--color-primary)' : 'inherit',
+                      fontWeight: selectedColor === color ? 700 : 500,
                       cursor: 'pointer'
                     }}
                   >
-                    ● {color}
+                    {color}
                   </button>
                 ))}
               </div>
             </div>
           )}
 
-          {/* Quantity Stepper & Actions */}
-          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginTop: '1rem', flexWrap: 'wrap' }}>
-            <div className="quantity-stepper">
-              <button
-                className="stepper-btn stepper-dec"
-                onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
-                aria-label="Decrease quantity"
-              >
-                -
-              </button>
-              <input
-                type="text"
-                className="stepper-input"
-                value={quantity}
-                readOnly
-                aria-label="Quantity"
-              />
-              <button
-                className="stepper-btn stepper-inc"
-                onClick={() => setQuantity(prev => Math.min(99, prev + 1))}
-                aria-label="Increase quantity"
-              >
-                +
-              </button>
-            </div>
-
-            <button
-              className="btn btn-primary btn-lg add-to-cart-btn"
-              onClick={() => addToCart(product, quantity, selectedColor)}
-              style={{ flex: 1, minWidth: '180px' }}
-            >
-              🛒 Add {quantity} to Cart
-            </button>
-
-            <button
-              className="btn btn-secondary btn-lg"
-              onClick={handleBuyNow}
-              style={{ flex: 1, minWidth: '180px' }}
-            >
-              ⚡ Instant Checkout
-            </button>
+          {/* About this Item */}
+          <div style={{ marginBottom: '20px' }}>
+            <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '8px', color: '#0f1111' }}>
+              About this item
+            </h3>
+            <p style={{ fontSize: '0.875rem', color: '#333333', lineHeight: 1.6, marginBottom: '12px' }}>
+              {product.description}
+            </p>
+            <ul style={{ paddingLeft: '20px', fontSize: '0.85rem', color: '#333333', lineHeight: 1.6 }}>
+              <li>{product.tagline}</li>
+              <li>High-durability build backed by NovaTech 2-Year Official Comprehensive Warranty.</li>
+              <li>Engineered for professional content creators, developers, and daily power users.</li>
+            </ul>
           </div>
+        </div>
 
-          {/* Value Assurances */}
-          <div style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid var(--color-bg-subtle)', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.875rem' }}>
-              <span>🚚</span>
-              <span><strong>Free Express Delivery:</strong> Estimated arrival in 2–3 business days.</span>
+        {/* Column 3: Amazon Sticky Buy Box */}
+        <div>
+          <div className="sticky-buy-box">
+            <div className="buy-box-price">
+              ${(product.price * quantity).toFixed(2)}
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.875rem' }}>
-              <span>🛡️</span>
-              <span><strong>2-Year Manufacturer Warranty</strong> with free express replacement.</span>
+
+            <div className="buy-box-delivery">
+              <span className="badge-prime" style={{ marginRight: '6px' }}>Prime</span>
+              <span>FREE delivery <strong>Tomorrow, 27 Sept</strong>.</span>
+              <br />
+              <span style={{ fontSize: '0.8rem', color: '#565959' }}>
+                Order within <strong>4 hrs 12 mins</strong>.
+              </span>
+            </div>
+
+            <div style={{ fontSize: '0.8rem', color: '#007185', marginBottom: '12px', cursor: 'pointer' }}>
+              📍 Deliver to Chennai {deliveryPincode}
+            </div>
+
+            <div className="buy-box-stock">In Stock</div>
+
+            {/* Quantity Dropdown */}
+            <div style={{ marginBottom: '16px' }}>
+              <label htmlFor="buybox-quantity" style={{ fontSize: '0.85rem', fontWeight: 600, display: 'block', marginBottom: '4px' }}>
+                Quantity:
+              </label>
+              <select
+                id="buybox-quantity"
+                className="buy-box-qty-select"
+                value={quantity}
+                onChange={(e) => setQuantity(Number(e.target.value))}
+              >
+                {[1, 2, 3, 4, 5, 10].map((num) => (
+                  <option key={num} value={num}>
+                    {num}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* CTA Buttons: Yellow Add to Cart & Orange Buy Now */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <button
+                type="button"
+                className="btn btn-cart-yellow btn-block"
+                onClick={() => addToCart(product, quantity, selectedColor)}
+              >
+                Add to Cart
+              </button>
+              <button
+                type="button"
+                className="btn btn-orange btn-block"
+                onClick={handleBuyNow}
+              >
+                Buy Now
+              </button>
+            </div>
+
+            {/* Guarantee Details */}
+            <div style={{ fontSize: '0.75rem', color: '#565959', marginTop: '16px', lineHeight: 1.6, borderTop: '1px solid #e7e7e7', paddingTop: '12px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span>Ships from</span>
+                <strong style={{ color: '#0f1111' }}>NovaTech Logistics</strong>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span>Sold by</span>
+                <strong style={{ color: '#0f1111' }}>NovaTech Official</strong>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span>Returns</span>
+                <strong style={{ color: '#007185' }}>7-day Replacement</strong>
+              </div>
+            </div>
+
+            <div className="buy-box-security">
+              <span>🔒 Secure transaction</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Tabs Section */}
-      <div className="tab-container">
-        <nav className="tab-nav" role="tablist" aria-label="Product Tabs">
+      {/* Specifications & Overview Tabs */}
+      <div style={{ background: '#ffffff', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', padding: '24px', marginBottom: '32px' }}>
+        <div style={{ display: 'flex', borderBottom: '1px solid #e7e7e7', marginBottom: '20px' }}>
           <button
-            className={`tab-btn ${activeTab === 'specs' ? 'active' : ''}`}
+            type="button"
             onClick={() => setActiveTab('specs')}
+            style={{
+              padding: '10px 20px',
+              border: 'none',
+              borderBottom: activeTab === 'specs' ? '3px solid var(--color-cta-orange)' : '3px solid transparent',
+              background: 'none',
+              fontWeight: activeTab === 'specs' ? 700 : 500,
+              color: activeTab === 'specs' ? '#0f1111' : '#565959',
+              cursor: 'pointer',
+              fontSize: '0.95rem'
+            }}
           >
             Technical Specifications
           </button>
           <button
-            className={`tab-btn ${activeTab === 'overview' ? 'active' : ''}`}
-            onClick={() => setActiveTab('overview')}
-          >
-            Detailed Overview
-          </button>
-          <button
-            className={`tab-btn ${activeTab === 'reviews' ? 'active' : ''}`}
+            type="button"
             onClick={() => setActiveTab('reviews')}
+            style={{
+              padding: '10px 20px',
+              border: 'none',
+              borderBottom: activeTab === 'reviews' ? '3px solid var(--color-cta-orange)' : '3px solid transparent',
+              background: 'none',
+              fontWeight: activeTab === 'reviews' ? 700 : 500,
+              color: activeTab === 'reviews' ? '#0f1111' : '#565959',
+              cursor: 'pointer',
+              fontSize: '0.95rem'
+            }}
           >
             Customer Reviews ({product.reviewsCount})
           </button>
-        </nav>
+        </div>
 
         {activeTab === 'specs' && (
-          <div className="tab-pane active">
-            <table className="specs-table">
-              <tbody>
-                {Object.entries(product.specs || {}).map(([key, value]) => (
-                  <tr key={key}>
-                    <td>{key}</td>
-                    <td>{value}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        {activeTab === 'overview' && (
-          <div className="tab-pane active">
-            <h3>Precision Engineering for Creators & Professionals</h3>
-            <p>{product.description}</p>
-            <p>
-              Each {product.name} is constructed from premium acoustic materials and thoroughly benchmarked against strict industry standards before shipment.
-            </p>
-          </div>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
+            <tbody>
+              {product.specs && Object.entries(product.specs).map(([specKey, specVal], idx) => (
+                <tr key={specKey} style={{ backgroundColor: idx % 2 === 0 ? '#f7fafa' : '#ffffff' }}>
+                  <td style={{ padding: '10px 16px', fontWeight: 600, width: '35%', color: '#0f1111', borderBottom: '1px solid #e7e7e7' }}>
+                    {specKey}
+                  </td>
+                  <td style={{ padding: '10px 16px', color: '#565959', borderBottom: '1px solid #e7e7e7' }}>
+                    {specVal}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         )}
 
         {activeTab === 'reviews' && (
-          <div className="tab-pane active">
-            <div style={{ display: 'flex', gap: '2rem', alignItems: 'center', marginBottom: '2rem', padding: '1.5rem', background: 'var(--color-bg-subtle)', borderRadius: '12px' }}>
-              <div>
-                <div style={{ fontSize: '3rem', fontWeight: 800, color: 'var(--color-secondary)' }}>
-                  {product.rating.toFixed(1)}
-                </div>
-                <StarRating rating={product.rating} />
-                <div style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>
-                  Based on {product.reviewsCount} customer reviews
-                </div>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
+              <div style={{ fontSize: '2.5rem', fontWeight: 800, color: '#0f1111' }}>
+                {product.rating}
               </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: '0.85rem', marginBottom: '4px' }}>5 Stars: 91%</div>
-                <div style={{ fontSize: '0.85rem', marginBottom: '4px' }}>4 Stars: 8%</div>
-                <div style={{ fontSize: '0.85rem' }}>3 Stars: 1%</div>
+              <div>
+                <StarRating rating={product.rating} />
+                <div style={{ fontSize: '0.85rem', color: '#565959', marginTop: '4px' }}>
+                  Based on {product.reviewsCount} global verified ratings
+                </div>
               </div>
             </div>
 
-            <div style={{ paddingBottom: '1.5rem', borderBottom: '1px solid var(--color-border)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                <strong>Verified Buyer <span className="badge badge-success">Verified Purchase</span></strong>
-                <span style={{ fontSize: '0.8rem', color: 'var(--color-text-light)' }}>Recent review</span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ borderBottom: '1px solid #e7e7e7', paddingBottom: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                  <span style={{ fontWeight: 700, fontSize: '0.875rem' }}>Arun K. (Verified Purchase)</span>
+                  <span style={{ fontSize: '0.75rem', color: '#565959' }}>• Reviewed on 20 Sept 2026</span>
+                </div>
+                <div style={{ color: 'var(--color-star-gold)', fontSize: '0.85rem', marginBottom: '4px' }}>★★★★★</div>
+                <p style={{ fontSize: '0.85rem', color: '#333333', margin: 0 }}>
+                  Exceptional soundstage and noise cancelling. Delivered within 24 hours in pristine condition!
+                </p>
               </div>
-              <div className="rating-stars" style={{ marginBottom: '0.5rem' }}>★★★★★</div>
-              <p style={{ marginBottom: 0 }}>
-                "Exceptional performance and durability. Exactly as described, fast shipping, and high quality."
-              </p>
+
+              <div style={{ borderBottom: '1px solid #e7e7e7', paddingBottom: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                  <span style={{ fontWeight: 700, fontSize: '0.875rem' }}>Sneha M. (Verified Purchase)</span>
+                  <span style={{ fontSize: '0.75rem', color: '#565959' }}>• Reviewed on 14 Sept 2026</span>
+                </div>
+                <div style={{ color: 'var(--color-star-gold)', fontSize: '0.85rem', marginBottom: '4px' }}>★★★★★</div>
+                <p style={{ fontSize: '0.85rem', color: '#333333', margin: 0 }}>
+                  Build quality is premium. Battery life easily exceeded 40 hours with ANC activated.
+                </p>
+              </div>
             </div>
           </div>
         )}
       </div>
 
-      {/* Recommended Products */}
-      <div style={{ marginTop: 'var(--space-16)' }}>
-        <h2 style={{ marginBottom: 'var(--space-6)' }}>Frequently Paired With This Item</h2>
-        <div className="grid grid-cols-3">
-          {relatedProducts.map(p => (
+      {/* Related Products Shelf */}
+      <section style={{ background: '#ffffff', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', padding: '20px' }}>
+        <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '16px', color: '#0f1111' }}>
+          Customers who viewed this item also viewed
+        </h3>
+        <div className="product-grid" style={{ marginBottom: 0 }}>
+          {relatedProducts.map((p) => (
             <ProductCard
               key={p.id}
               product={p}
@@ -290,7 +370,7 @@ export default function ProductDetail({ productId = 'prod-1', setActivePage, onS
             />
           ))}
         </div>
-      </div>
+      </section>
     </div>
   );
 }

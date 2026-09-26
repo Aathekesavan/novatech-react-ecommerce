@@ -18,7 +18,22 @@ import './styles/layout.css';
 import './styles/responsive.css';
 
 export default function App() {
-  const [activePage, setActivePage] = useState('home');
+  const getInitialPage = () => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const page = params.get('page');
+      if (page && ['home', 'products', 'detail', 'cart', 'contact'].includes(page)) {
+        return page;
+      }
+      const hash = window.location.hash.replace('#', '');
+      if (hash && ['home', 'products', 'detail', 'cart', 'contact'].includes(hash)) {
+        return hash;
+      }
+    }
+    return 'home';
+  };
+
+  const [activePage, setActivePage] = useState(getInitialPage);
   const [selectedProductId, setSelectedProductId] = useState('prod-1');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -47,6 +62,8 @@ export default function App() {
           onSearch={handleSearch}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
         />
 
         <main style={{ flex: '1 0 auto' }}>

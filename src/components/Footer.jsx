@@ -1,81 +1,71 @@
 import React from 'react';
 
 export default function Footer({ setActivePage }) {
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <footer className="site-footer">
-      <div className="container">
-        <div className="footer-top-grid">
-          <div className="footer-brand">
-            <a
-              href="#home"
-              className="brand-logo"
-              style={{ color: '#ffffff' }}
-              onClick={(e) => { e.preventDefault(); setActivePage('home'); }}
-            >
-              <span className="logo-icon">⚡</span>
-              <span>Nova<span className="logo-accent">Tech</span></span>
-            </a>
-            <p>
-              NovaTech is an industry leader in cutting-edge electronics, consumer audio, computing hardware, and smart lifestyle accessories.
-            </p>
-          </div>
+      {/* Back to Top Ribbon */}
+      <div className="footer-back-to-top" onClick={scrollToTop}>
+        Back to top ▲
+      </div>
 
-          <div>
-            <h3 className="footer-title">Quick Links</h3>
-            <ul className="footer-links">
-              <li>
-                <a href="#home" onClick={(e) => { e.preventDefault(); setActivePage('home'); }}>Home</a>
-              </li>
-              <li>
-                <a href="#products" onClick={(e) => { e.preventDefault(); setActivePage('products'); }}>All Products</a>
-              </li>
-              <li>
-                <a href="#detail" onClick={(e) => { e.preventDefault(); setActivePage('detail'); }}>Featured Flagship</a>
-              </li>
-              <li>
-                <a href="#cart" onClick={(e) => { e.preventDefault(); setActivePage('cart'); }}>Shopping Cart</a>
-              </li>
-              <li>
-                <a href="#contact" onClick={(e) => { e.preventDefault(); setActivePage('contact'); }}>Support & FAQ</a>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="footer-title">Categories</h3>
-            <ul className="footer-links">
-              <li>
-                <a href="#products" onClick={(e) => { e.preventDefault(); setActivePage('products'); }}>Audio & Headphones</a>
-              </li>
-              <li>
-                <a href="#products" onClick={(e) => { e.preventDefault(); setActivePage('products'); }}>Smartwatches</a>
-              </li>
-              <li>
-                <a href="#products" onClick={(e) => { e.preventDefault(); setActivePage('products'); }}>Ultrabooks & PCs</a>
-              </li>
-              <li>
-                <a href="#products" onClick={(e) => { e.preventDefault(); setActivePage('products'); }}>Mechanical Keyboards</a>
-              </li>
-              <li>
-                <a href="#products" onClick={(e) => { e.preventDefault(); setActivePage('products'); }}>Drones & Cameras</a>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="footer-title">Customer Care</h3>
-            <p style={{ fontSize: '0.875rem', marginBottom: '0.5rem' }}>Have questions or need technical advice?</p>
-            <p style={{ fontSize: '0.875rem', color: '#ffffff', fontWeight: 600 }}>📞 1-800-NOVATECH</p>
-            <p style={{ fontSize: '0.875rem', color: '#ffffff', fontWeight: 600 }}>✉ support@novatech.io</p>
-            <p style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '0.5rem' }}>Open Mon – Fri: 9:00 AM – 8:00 PM EST</p>
-          </div>
+      {/* 4-Column Amazon Links */}
+      <div className="footer-main-links">
+        <div>
+          <h4 className="footer-col-title">Get to Know Us</h4>
+          <ul className="footer-col-links">
+            <li><a href="#about" onClick={(e) => { e.preventDefault(); setActivePage('contact'); }}>About NovaTech</a></li>
+            <li><a href="#careers" onClick={(e) => { e.preventDefault(); setActivePage('contact'); }}>Careers & Culture</a></li>
+            <li><a href="#press" onClick={(e) => { e.preventDefault(); setActivePage('contact'); }}>Press Releases</a></li>
+            <li><a href="#science" onClick={(e) => { e.preventDefault(); setActivePage('contact'); }}>NovaTech Engineering</a></li>
+          </ul>
         </div>
 
-        <div className="footer-bottom">
-          <div>&copy; 2026 NovaTech Electronics Inc. Task 2 ReactJS Single Page Application.</div>
-          <div>
-            <span>Privacy Policy</span> • <span>Terms of Service</span> • <span>Security</span>
-          </div>
+        <div>
+          <h4 className="footer-col-title">Connect with Us</h4>
+          <ul className="footer-col-links">
+            <li><a href="https://github.com/Aathekesavan" target="_blank" rel="noopener noreferrer">GitHub Profile</a></li>
+            <li><a href="#social" onClick={(e) => { e.preventDefault(); setActivePage('contact'); }}>Twitter / X</a></li>
+            <li><a href="#social" onClick={(e) => { e.preventDefault(); setActivePage('contact'); }}>Instagram</a></li>
+            <li><a href="#social" onClick={(e) => { e.preventDefault(); setActivePage('contact'); }}>LinkedIn</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="footer-col-title">Make Money with Us</h4>
+          <ul className="footer-col-links">
+            <li><a href="#sell" onClick={(e) => { e.preventDefault(); setActivePage('contact'); }}>Sell on NovaTech</a></li>
+            <li><a href="#affiliate" onClick={(e) => { e.preventDefault(); setActivePage('contact'); }}>Become an Affiliate</a></li>
+            <li><a href="#fulfilment" onClick={(e) => { e.preventDefault(); setActivePage('contact'); }}>Fulfilment by NovaTech</a></li>
+            <li><a href="#advertise" onClick={(e) => { e.preventDefault(); setActivePage('contact'); }}>Advertise Your Products</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="footer-col-title">Let Us Help You</h4>
+          <ul className="footer-col-links">
+            <li><a href="#account" onClick={(e) => { e.preventDefault(); setActivePage('contact'); }}>Your Account</a></li>
+            <li><a href="#returns" onClick={(e) => { e.preventDefault(); setActivePage('cart'); }}>Returns & Replacements</a></li>
+            <li><a href="#protection" onClick={(e) => { e.preventDefault(); setActivePage('contact'); }}>100% Purchase Protection</a></li>
+            <li><a href="#help" onClick={(e) => { e.preventDefault(); setActivePage('contact'); }}>Help Desk & FAQs</a></li>
+          </ul>
+        </div>
+      </div>
+
+      {/* Bottom Legal & Trademark Strip */}
+      <div className="footer-bottom-strip">
+        <div style={{ marginBottom: '8px', display: 'flex', justifyContent: 'center', gap: '16px', flexWrap: 'wrap' }}>
+          <span style={{ cursor: 'pointer' }} onClick={() => setActivePage('home')}>Conditions of Use & Sale</span>
+          <span>•</span>
+          <span style={{ cursor: 'pointer' }} onClick={() => setActivePage('home')}>Privacy Notice</span>
+          <span>•</span>
+          <span style={{ cursor: 'pointer' }} onClick={() => setActivePage('home')}>Interest-Based Ads</span>
+        </div>
+        <div>
+          © 2026 NovaTech E-Commerce Inc. or its affiliates. Built for Full Stack Web Development (Task 2 ReactJS Single Page Application).
         </div>
       </div>
     </footer>

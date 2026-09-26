@@ -6,36 +6,38 @@ export default function ProductCard({ product, onSelectProduct }) {
   const { addToCart } = useCart();
   const [isWishlisted, setIsWishlisted] = useState(false);
 
-  const getBadgeClass = (type) => {
-    switch (type) {
-      case 'sale': return 'badge-sale';
-      case 'new': return 'badge-new';
-      case 'featured': return 'badge-featured';
-      default: return 'badge-primary';
-    }
-  };
+  const discountPercent = product.originalPrice
+    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+    : 0;
 
   return (
     <article className="product-card">
-      {product.badge && (
-        <span className={`badge ${getBadgeClass(product.badge)} product-card-badge`}>
-          {product.badgeText}
+      {/* Badges: NovaTech's Choice or Deal of the Day */}
+      {product.badge === 'sale' && (
+        <span className="badge badge-deal product-card-badge">
+          Deal of the Day
+        </span>
+      )}
+      {product.badge === 'featured' && (
+        <span className="badge badge-choice product-card-badge">
+          Nova<span className="badge-accent">Choice</span>
         </span>
       )}
 
+      {/* Wishlist Heart Icon */}
       <button
         className="product-card-wishlist"
-        style={{ color: isWishlisted ? 'var(--color-danger)' : undefined }}
+        style={{ color: isWishlisted ? 'var(--color-deal-red)' : undefined }}
         onClick={() => setIsWishlisted(!isWishlisted)}
         aria-label={isWishlisted ? 'Remove from wishlist' : 'Save to wishlist'}
       >
         {isWishlisted ? '♥' : '♡'}
       </button>
 
+      {/* Product Image Preview */}
       <div
         className="product-card-img-wrap"
         onClick={() => onSelectProduct && onSelectProduct(product.id)}
-        style={{ cursor: 'pointer' }}
       >
         <img
           src={product.image}
@@ -46,38 +48,57 @@ export default function ProductCard({ product, onSelectProduct }) {
       </div>
 
       <div className="product-card-body">
-        <span className="product-card-category">{product.categoryLabel}</span>
-        
-        <h3 className="product-card-title">
-          <a
-            href={`#detail-${product.id}`}
-            onClick={(e) => {
-              e.preventDefault();
-              onSelectProduct && onSelectProduct(product.id);
-            }}
-          >
-            {product.name}
-          </a>
+        {/* Brand */}
+        <span className="product-card-brand">{product.brand || 'NovaTech'}</span>
+
+        {/* Title */}
+        <h3
+          className="product-card-title"
+          onClick={() => onSelectProduct && onSelectProduct(product.id)}
+          title={product.name}
+        >
+          {product.name}
         </h3>
 
-        <div className="product-card-rating">
+        {/* Ratings & Star Count */}
+        <div style={{ margin: '4px 0' }}>
           <StarRating rating={product.rating} reviewsCount={product.reviewsCount} />
         </div>
 
-        <div className="product-card-footer">
-          <div className="product-price-wrap">
-            <span className="product-current-price">${product.price.toFixed(2)}</span>
-            {product.originalPrice && (
-              <span className="product-original-price">${product.originalPrice.toFixed(2)}</span>
-            )}
-          </div>
+        {/* Price Row (Amazon / Flipkart Style) */}
+        <div className="product-card-price-row">
+          <span className="product-price-current">
+            <span className="currency-symbol">$</span>
+            {product.price.toFixed(2)}
+          </span>
+          {product.originalPrice && (
+            <>
+              <span className="product-price-original">
+                ${product.originalPrice.toFixed(2)}
+              </span>
+              <span className="badge-discount-tag">
+                {discountPercent}% off
+              </span>
+            </>
+          )}
+        </div>
 
+        {/* Delivery Guarantee */}
+        <div className="product-card-delivery">
+          <span className="badge-prime" style={{ marginRight: '6px' }}>Prime</span>
+          <span>Get it by <strong>Tomorrow, 27 Sept</strong></span>
+          <br />
+          <span>FREE Delivery by NovaTech</span>
+        </div>
+
+        {/* Action Button: Amazon Signature Yellow */}
+        <div className="product-card-actions">
           <button
-            className="btn btn-sm btn-primary add-to-cart-btn"
+            className="btn btn-cart-yellow btn-block btn-sm"
             onClick={() => addToCart(product, 1)}
             aria-label={`Add ${product.name} to cart`}
           >
-            Add +
+            Add to Cart
           </button>
         </div>
       </div>

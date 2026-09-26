@@ -1,166 +1,285 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ProductCard from '../components/ProductCard';
-import { PRODUCTS, CATEGORIES } from '../data/products';
+import { PRODUCTS } from '../data/products';
 import { useCart } from '../context/CartContext';
 
 export default function Home({ setActivePage, onSelectProduct, setSelectedCategory }) {
   const { showToast } = useCart();
   const [newsletterEmail, setNewsletterEmail] = useState('');
+  
+  // Real-time ticking countdown for Amazon Lightning Deals
+  const [timer, setTimer] = useState({ hours: 4, minutes: 48, seconds: 22 });
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimer((prev) => {
+        if (prev.seconds > 0) {
+          return { ...prev, seconds: prev.seconds - 1 };
+        } else if (prev.minutes > 0) {
+          return { ...prev, minutes: 59, seconds: 59 };
+        } else if (prev.hours > 0) {
+          return { hours: prev.hours - 1, minutes: 59, seconds: 59 };
+        }
+        return { hours: 12, minutes: 0, seconds: 0 };
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleCategoryClick = (catId) => {
-    setSelectedCategory(catId);
+    if (setSelectedCategory) setSelectedCategory(catId);
     setActivePage('products');
   };
 
   const handleNewsletterSubmit = (e) => {
     e.preventDefault();
     if (newsletterEmail) {
-      showToast('✓ Thank you for subscribing to NovaTech VIP updates!');
+      showToast('✓ Subscribed! You will receive exclusive Amazon/Flipkart flash sale alerts.');
       setNewsletterEmail('');
     }
   };
 
+  // Top deals (products on sale)
+  const dealsProducts = PRODUCTS.filter((p) => p.badge === 'sale' || p.originalPrice);
+
   return (
-    <div>
-      {/* Hero Banner Section */}
-      <section className="hero-section">
-        <div className="container hero-grid">
-          <div className="hero-content">
-            <div className="hero-tagline">🚀 Breakthrough Technology 2026</div>
+    <div className="main-content" style={{ padding: 0 }}>
+      {/* 1. Flipkart Style Circular Category Ribbon */}
+      <div className="category-ribbon">
+        <div className="category-pill-item" onClick={() => handleCategoryClick('audio')}>
+          <div className="category-pill-icon">🎧</div>
+          <span className="category-pill-name">Audio & Sound</span>
+        </div>
+        <div className="category-pill-item" onClick={() => handleCategoryClick('wearables')}>
+          <div className="category-pill-icon">⌚</div>
+          <span className="category-pill-name">Smartwatches</span>
+        </div>
+        <div className="category-pill-item" onClick={() => handleCategoryClick('computing')}>
+          <div className="category-pill-icon">💻</div>
+          <span className="category-pill-name">Laptops & PCs</span>
+        </div>
+        <div className="category-pill-item" onClick={() => handleCategoryClick('gaming')}>
+          <div className="category-pill-icon">⌨️</div>
+          <span className="category-pill-name">Gaming Tech</span>
+        </div>
+        <div className="category-pill-item" onClick={() => handleCategoryClick('cameras')}>
+          <div className="category-pill-icon">📷</div>
+          <span className="category-pill-name">Cameras</span>
+        </div>
+        <div className="category-pill-item" onClick={() => handleCategoryClick('all')}>
+          <div className="category-pill-icon" style={{ backgroundColor: '#fff4e5', borderColor: '#febd69' }}>⚡</div>
+          <span className="category-pill-name" style={{ color: '#c7511f', fontWeight: 700 }}>Top Deals</span>
+        </div>
+      </div>
+
+      {/* 2. Amazon Style Mega Hero Promotional Banner */}
+      <div className="hero-carousel">
+        <div className="hero-content">
+          <div>
+            <span className="hero-tag">⚡ Grand Festive Electronics Sale</span>
             <h1 className="hero-title">
-              Experience Audio & Computing <span className="highlight">Reimagined.</span>
+              Up to 50% Off on Premium Audio & Next-Gen Laptops
             </h1>
-            <p className="hero-description">
-              Discover precision-engineered electronics crafted for high performance, audiophile-grade acoustics, and unmatched reliability.
+            <p className="hero-subtitle">
+              Shop flagship studio headphones, ultraportables, 4K action cameras, and AMOLED smartwatches with instant bank discounts & No-Cost EMI.
             </p>
-            <div className="hero-buttons">
+            <div className="hero-cta-group">
               <button
-                className="btn btn-primary btn-lg"
+                className="btn btn-cart-yellow btn-lg"
                 onClick={() => setActivePage('products')}
               >
-                Explore Catalog &rarr;
+                Shop Deals Now &rarr;
               </button>
               <button
-                className="btn btn-outline btn-lg"
-                style={{ color: '#ffffff', borderColor: 'rgba(255,255,255,0.4)' }}
+                className="btn btn-orange btn-lg"
                 onClick={() => onSelectProduct('prod-1')}
               >
-                View Flagship Product
+                Explore NovaPro Studio ANC
               </button>
             </div>
           </div>
+          <div className="hero-image-wrap">
+            <img
+              src={PRODUCTS[0].image}
+              alt="NovaPro Studio ANC"
+              className="hero-image"
+            />
+          </div>
+        </div>
+      </div>
 
-          <div className="hero-visual">
-            <div className="hero-banner-card">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                <span className="badge badge-sale">Limited Edition</span>
-                <span style={{ color: '#94a3b8', fontSize: '0.85rem' }}>In Stock (42 units)</span>
+      <div className="container">
+        {/* 3. Today's Lightning Deals with Live Countdown */}
+        <section style={{ marginBottom: '24px' }}>
+          <div className="deals-header-bar">
+            <div className="deals-title-group">
+              <span style={{ fontSize: '1.4rem' }}>⚡</span>
+              <h2 className="deals-title">Today's Lightning Deals</h2>
+              <div className="deals-timer-badge">
+                <span>⏱ Ends in:</span>
+                <strong>
+                  {String(timer.hours).padStart(2, '0')}h : {String(timer.minutes).padStart(2, '0')}m : {String(timer.seconds).padStart(2, '0')}s
+                </strong>
               </div>
-              <img
-                src={PRODUCTS[0].image}
-                alt="NovaPro Wireless ANC Headphones"
-                style={{ maxHeight: '220px', margin: '0 auto', cursor: 'pointer' }}
-                onClick={() => onSelectProduct('prod-1')}
-              />
-              <h3 style={{ color: '#ffffff', marginTop: '1rem', fontSize: '1.25rem' }}>
-                {PRODUCTS[0].name}
-              </h3>
-              <p style={{ color: '#94a3b8', fontSize: '0.9rem', marginBottom: 0 }}>
-                {PRODUCTS[0].tagline}
+            </div>
+            <a
+              href="#products"
+              className="section-link"
+              onClick={(e) => { e.preventDefault(); setActivePage('products'); }}
+            >
+              See all lightning deals &rarr;
+            </a>
+          </div>
+
+          <div style={{
+            background: '#ffffff',
+            border: '1px solid var(--color-border)',
+            borderTop: 'none',
+            borderRadius: '0 0 var(--radius-sm) var(--radius-sm)',
+            padding: '16px'
+          }}>
+            <div className="product-grid" style={{ marginBottom: 0 }}>
+              {dealsProducts.slice(0, 4).map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  onSelectProduct={onSelectProduct}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 4. Amazon Quad-Cluster 4-in-1 Cards */}
+        <section className="quad-grid">
+          {/* Quad 1 */}
+          <div className="quad-card">
+            <h3 className="quad-card-title">Upgrade Your Work Setup</h3>
+            <div className="quad-card-grid">
+              <div className="quad-mini-item" onClick={() => onSelectProduct('prod-3')}>
+                <div className="quad-mini-img-wrap">
+                  <img src={PRODUCTS[2].image} alt="Laptop" className="quad-mini-img" />
+                </div>
+                <div className="quad-mini-label">Ultrabook Laptops</div>
+              </div>
+              <div className="quad-mini-item" onClick={() => onSelectProduct('prod-7')}>
+                <div className="quad-mini-img-wrap">
+                  <img src={PRODUCTS[6].image} alt="Keyboard" className="quad-mini-img" />
+                </div>
+                <div className="quad-mini-label">Mechanical Keyboards</div>
+              </div>
+              <div className="quad-mini-item" onClick={() => onSelectProduct('prod-1')}>
+                <div className="quad-mini-img-wrap">
+                  <img src={PRODUCTS[0].image} alt="Headphones" className="quad-mini-img" />
+                </div>
+                <div className="quad-mini-label">Studio ANC Headsets</div>
+              </div>
+              <div className="quad-mini-item" onClick={() => onSelectProduct('prod-2')}>
+                <div className="quad-mini-img-wrap">
+                  <img src={PRODUCTS[1].image} alt="Watch" className="quad-mini-img" />
+                </div>
+                <div className="quad-mini-label">Smart AMOLED Watches</div>
+              </div>
+            </div>
+            <a
+              href="#products"
+              className="quad-card-link"
+              onClick={(e) => { e.preventDefault(); setActivePage('products'); }}
+            >
+              Explore productivity tech &rarr;
+            </a>
+          </div>
+
+          {/* Quad 2 */}
+          <div className="quad-card">
+            <h3 className="quad-card-title">Best Sellers in Audio & Music</h3>
+            <div className="quad-card-grid">
+              <div className="quad-mini-item" onClick={() => onSelectProduct('prod-1')}>
+                <div className="quad-mini-img-wrap">
+                  <img src={PRODUCTS[0].image} alt="Studio Headphones" className="quad-mini-img" />
+                </div>
+                <div className="quad-mini-label">Over-Ear ANC (4.9★)</div>
+              </div>
+              <div className="quad-mini-item" onClick={() => onSelectProduct('prod-4')}>
+                <div className="quad-mini-img-wrap">
+                  <img src={PRODUCTS[3].image} alt="Earbuds" className="quad-mini-img" />
+                </div>
+                <div className="quad-mini-label">Spatial Earbuds</div>
+              </div>
+              <div className="quad-mini-item" onClick={() => onSelectProduct('prod-5')}>
+                <div className="quad-mini-img-wrap">
+                  <img src={PRODUCTS[4].image} alt="Speaker" className="quad-mini-img" />
+                </div>
+                <div className="quad-mini-label">IPX7 Rugged Speakers</div>
+              </div>
+              <div className="quad-mini-item" onClick={() => onSelectProduct('prod-8')}>
+                <div className="quad-mini-img-wrap">
+                  <img src={PRODUCTS[7].image} alt="Drone" className="quad-mini-img" />
+                </div>
+                <div className="quad-mini-label">4K Video Drones</div>
+              </div>
+            </div>
+            <a
+              href="#products"
+              className="quad-card-link"
+              onClick={(e) => { e.preventDefault(); handleCategoryClick('audio'); }}
+            >
+              See all audio gear &rarr;
+            </a>
+          </div>
+
+          {/* Quad 3: Exclusive Bank & Finance Offers */}
+          <div className="quad-card">
+            <h3 className="quad-card-title">Bank Discounts & Savings</h3>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '16px' }}>
+              <div style={{ background: '#f7fafa', border: '1px solid #d5d9d9', borderRadius: '4px', padding: '10px' }}>
+                <strong style={{ color: '#0f1111', fontSize: '0.85rem' }}>🏷 HDFC / ICICI Bank Cards</strong>
+                <p style={{ margin: '4px 0 0', fontSize: '0.75rem', color: '#565959' }}>
+                  10% Instant Discount up to $150 on minimum cart value of $200.
+                </p>
+              </div>
+              <div style={{ background: '#f7fafa', border: '1px solid #d5d9d9', borderRadius: '4px', padding: '10px' }}>
+                <strong style={{ color: '#0f1111', fontSize: '0.85rem' }}>💳 No-Cost EMI Available</strong>
+                <p style={{ margin: '4px 0 0', fontSize: '0.75rem', color: '#565959' }}>
+                  Zero down payment and zero interest for up to 12 months.
+                </p>
+              </div>
+              <div style={{ background: '#f7fafa', border: '1px solid #d5d9d9', borderRadius: '4px', padding: '10px' }}>
+                <strong style={{ color: '#007600', fontSize: '0.85rem' }}>🎟 Coupon TECH20</strong>
+                <p style={{ margin: '4px 0 0', fontSize: '0.75rem', color: '#565959' }}>
+                  Use code TECH20 at checkout for an extra 20% discount.
+                </p>
+              </div>
+            </div>
+            <a
+              href="#cart"
+              className="quad-card-link"
+              onClick={(e) => { e.preventDefault(); setActivePage('cart'); }}
+            >
+              View checkout discounts &rarr;
+            </a>
+          </div>
+        </section>
+
+        {/* 5. Complete Catalog Grid */}
+        <section className="section" style={{ backgroundColor: '#ffffff', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', padding: '20px', marginBottom: '24px' }}>
+          <div className="section-header" style={{ padding: 0, marginBottom: '16px' }}>
+            <div>
+              <h2 className="section-title">Trending Tech & New Releases</h2>
+              <p style={{ fontSize: '0.85rem', color: '#565959', margin: 0 }}>
+                Handcrafted electronics with industry-leading warranty and next-day delivery.
               </p>
-              <div className="hero-stat-row">
-                <div className="hero-stat-item">
-                  <div className="hero-stat-value">45h</div>
-                  <div className="hero-stat-label">Playtime</div>
-                </div>
-                <div className="hero-stat-item">
-                  <div className="hero-stat-value">-40dB</div>
-                  <div className="hero-stat-label">Noise Cancel</div>
-                </div>
-                <div className="hero-stat-item">
-                  <div className="hero-stat-value">4.9 ★</div>
-                  <div className="hero-stat-label">Rating</div>
-                </div>
-              </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Value Propositions Strip */}
-      <section className="features-strip" aria-label="Key Benefits">
-        <div className="container features-grid">
-          <div className="feature-box">
-            <div className="feature-icon-wrap">🚚</div>
-            <div>
-              <h2 className="feature-title">Free Express Shipping</h2>
-              <p className="feature-desc">Complimentary shipping on all orders over $50</p>
-            </div>
+            <button
+              className="btn btn-outline btn-sm"
+              onClick={() => setActivePage('products')}
+            >
+              View Full Catalog (8) &rarr;
+            </button>
           </div>
 
-          <div className="feature-box">
-            <div className="feature-icon-wrap">🛡️</div>
-            <div>
-              <h2 className="feature-title">2-Year Full Warranty</h2>
-              <p className="feature-desc">Official factory coverage and instant replacements</p>
-            </div>
-          </div>
-
-          <div className="feature-box">
-            <div className="feature-icon-wrap">🔄</div>
-            <div>
-              <h2 className="feature-title">30-Day Free Returns</h2>
-              <p className="feature-desc">Hassle-free return policy with zero restocking fees</p>
-            </div>
-          </div>
-
-          <div className="feature-box">
-            <div className="feature-icon-wrap">🎧</div>
-            <div>
-              <h2 className="feature-title">24/7 Expert Support</h2>
-              <p className="feature-desc">Certified hardware specialists ready to assist</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Categories Section */}
-      <section className="section" id="categories">
-        <div className="container">
-          <div className="section-title-wrap">
-            <span className="section-subtitle">Curated Departments</span>
-            <h2 className="section-title">Shop by Category</h2>
-            <p className="section-desc">Browse our premium selection engineered for creators, gamers, and working professionals.</p>
-          </div>
-
-          <div className="grid grid-cols-4">
-            {CATEGORIES.filter(c => c.id !== 'all').slice(0, 4).map(cat => (
-              <div
-                key={cat.id}
-                className="category-card"
-                onClick={() => handleCategoryClick(cat.id)}
-                style={{ cursor: 'pointer' }}
-              >
-                <div className="category-icon-box">{cat.icon}</div>
-                <h3 className="category-title">{cat.name}</h3>
-                <span className="category-count">{cat.count} Products Available</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Trending Products Grid */}
-      <section className="section" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
-        <div className="container">
-          <div className="section-title-wrap">
-            <span className="section-subtitle">Staff Picks & Best Sellers</span>
-            <h2 className="section-title">Trending Tech Deals</h2>
-            <p className="section-desc">Top-rated items favored by our worldwide community of tech enthusiasts.</p>
-          </div>
-
-          <div className="grid grid-cols-4">
-            {PRODUCTS.map(product => (
+          <div className="product-grid" style={{ marginBottom: 0 }}>
+            {PRODUCTS.map((product) => (
               <ProductCard
                 key={product.id}
                 product={product}
@@ -168,133 +287,79 @@ export default function Home({ setActivePage, onSelectProduct, setSelectedCatego
               />
             ))}
           </div>
+        </section>
 
-          <div style={{ textAlign: 'center', marginTop: '3rem' }}>
-            <button
-              className="btn btn-outline-primary btn-lg"
-              onClick={() => setActivePage('products')}
-            >
-              Browse Full Catalog ({PRODUCTS.length} Items) &rarr;
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* Promotional Dual Banners */}
-      <section className="section">
-        <div className="container">
-          <div className="promo-banners-grid">
-            <div className="promo-card dark">
-              <div style={{ maxWidth: '60%' }}>
-                <span className="badge badge-sale" style={{ marginBottom: '0.75rem' }}>Special Offer</span>
-                <h3>Audiophile Soundstage</h3>
-                <p>Get a complimentary hardshell case and 3 months of lossless streaming with any headset.</p>
-                <button
-                  className="btn btn-primary btn-sm"
-                  style={{ marginTop: '1rem' }}
-                  onClick={() => handleCategoryClick('audio')}
-                >
-                  Shop Audio Deals
-                </button>
-              </div>
-              <img src={PRODUCTS[0].image} alt="Audio Deal" style={{ width: '140px', height: '140px', objectFit: 'contain' }} />
+        {/* 6. Brand Trust Guarantees */}
+        <div className="trust-bar">
+          <div className="trust-item">
+            <span className="trust-icon">🚚</span>
+            <div>
+              <div className="trust-title">Free & Fast Delivery</div>
+              <p className="trust-desc">Complimentary shipping on orders above $50</p>
             </div>
-
-            <div className="promo-card accent">
-              <div style={{ maxWidth: '60%' }}>
-                <span className="badge badge-new" style={{ marginBottom: '0.75rem' }}>Workstation Ready</span>
-                <h3>Pro Developer Setup</h3>
-                <p>Boost your productivity with ultra-fast Thunderbolt laptops and wireless mechanical peripherals.</p>
-                <button
-                  className="btn btn-secondary btn-sm"
-                  style={{ marginTop: '1rem' }}
-                  onClick={() => handleCategoryClick('computing')}
-                >
-                  Explore Workstations
-                </button>
-              </div>
-              <img src={PRODUCTS[2].image} alt="Laptop Deal" style={{ width: '150px', height: '150px', objectFit: 'contain' }} />
+          </div>
+          <div className="trust-item">
+            <span className="trust-icon">🔄</span>
+            <div>
+              <div className="trust-title">7 Days Replacement</div>
+              <p className="trust-desc">Hassle-free replacement for defective items</p>
+            </div>
+          </div>
+          <div className="trust-item">
+            <span className="trust-icon">🛡️</span>
+            <div>
+              <div className="trust-title">2 Years Official Warranty</div>
+              <p className="trust-desc">Comprehensive brand service protection</p>
+            </div>
+          </div>
+          <div className="trust-item">
+            <span className="trust-icon">🔒</span>
+            <div>
+              <div className="trust-title">100% Secure Transaction</div>
+              <p className="trust-desc">Encrypted payments via UPI, Cards, and COD</p>
             </div>
           </div>
         </div>
-      </section>
 
-      {/* Testimonials */}
-      <section className="section" style={{ backgroundColor: 'var(--color-bg-subtle)' }}>
-        <div className="container">
-          <div className="section-title-wrap">
-            <span className="section-subtitle">Verified Feedback</span>
-            <h2 className="section-title">Loved by Over 50,000 Customers</h2>
-            <p className="section-desc">See what audio engineers, programmers, and creators have to say about NovaTech products.</p>
-          </div>
-
-          <div className="grid grid-cols-3">
-            <div style={{ background: '#ffffff', padding: '2rem', borderRadius: '12px', border: '1px solid var(--color-border)' }}>
-              <div className="rating-stars" style={{ marginBottom: '1rem' }}>★★★★★</div>
-              <p style={{ fontStyle: 'italic', marginBottom: '1.5rem' }}>
-                "The NovaPro ANC headphones have completely replaced my office headset. The noise cancellation creates instant quiet, and battery life is genuinely stellar."
-              </p>
-              <div>
-                <strong>David Chen</strong>
-                <div style={{ fontSize: '0.8rem', color: '#64748b' }}>Senior Software Engineer, Seattle</div>
-              </div>
-            </div>
-
-            <div style={{ background: '#ffffff', padding: '2rem', borderRadius: '12px', border: '1px solid var(--color-border)' }}>
-              <div className="rating-stars" style={{ marginBottom: '1rem' }}>★★★★★</div>
-              <p style={{ fontStyle: 'italic', marginBottom: '1.5rem' }}>
-                "Super fast shipping and top notch customer service. I received my Zenith Pro laptop in 2 days, and the build quality is astonishingly premium."
-              </p>
-              <div>
-                <strong>Sarah Jenkins</strong>
-                <div style={{ fontSize: '0.8rem', color: '#64748b' }}>Creative Director, London</div>
-              </div>
-            </div>
-
-            <div style={{ background: '#ffffff', padding: '2rem', borderRadius: '12px', border: '1px solid var(--color-border)' }}>
-              <div className="rating-stars" style={{ marginBottom: '1rem' }}>★★★★★</div>
-              <p style={{ fontStyle: 'italic', marginBottom: '1.5rem' }}>
-                "The Apex Pro mechanical keyboard has the most satisfying tactile keystrokes I have ever used. Plus RGB custom lighting syncs seamlessly."
-              </p>
-              <div>
-                <strong>Marcus Brody</strong>
-                <div style={{ fontSize: '0.8rem', color: '#64748b' }}>Game Developer & Streamer</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Newsletter Subscription Strip */}
-      <section className="section" style={{ backgroundColor: 'var(--color-secondary)', color: '#ffffff', textAlign: 'center' }}>
-        <div className="container" style={{ maxWidth: '600px' }}>
-          <h2 style={{ color: '#ffffff', marginBottom: '0.5rem' }}>Stay Ahead of the Curve</h2>
-          <p style={{ color: '#94a3b8', marginBottom: '1.5rem' }}>
-            Subscribe for exclusive hardware drops, early VIP access, and weekly tech firmware roundups.
+        {/* 7. Newsletter Subscription Box */}
+        <section style={{
+          backgroundColor: '#ffffff',
+          border: '1px solid var(--color-border)',
+          borderRadius: 'var(--radius-sm)',
+          padding: '32px 24px',
+          textAlign: 'center',
+          marginBottom: '32px'
+        }}>
+          <h3 style={{ fontSize: '1.35rem', marginBottom: '8px', color: '#0f1111' }}>
+            Be the First to Know About Lightning Deals
+          </h3>
+          <p style={{ fontSize: '0.85rem', color: '#565959', maxWidth: '520px', margin: '0 auto 20px' }}>
+            Subscribe to the NovaTech VIP mailing list for early access to festival sales, exclusive promo codes, and technical releases.
           </p>
           <form
             onSubmit={handleNewsletterSubmit}
-            style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'center' }}
+            style={{ display: 'flex', gap: '8px', maxWidth: '440px', margin: '0 auto' }}
           >
             <input
               type="email"
-              required
               placeholder="Enter your email address"
+              required
               value={newsletterEmail}
               onChange={(e) => setNewsletterEmail(e.target.value)}
               style={{
-                padding: '0.75rem 1.25rem',
-                borderRadius: '8px',
-                border: '1px solid #334155',
-                background: '#1e293b',
-                color: '#ffffff',
-                minWidth: '280px'
+                flex: 1,
+                padding: '10px 14px',
+                border: '1px solid #d5d9d9',
+                borderRadius: '4px',
+                fontSize: '0.9rem'
               }}
             />
-            <button type="submit" className="btn btn-primary">Join Community</button>
+            <button type="submit" className="btn btn-cart-yellow">
+              Subscribe
+            </button>
           </form>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
   );
 }

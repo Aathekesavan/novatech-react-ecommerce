@@ -1,13 +1,21 @@
 # NovaTech E-Commerce — Interactive ReactJS Application
 ## Comprehensive Task 2 Academic Report & Submission Dossier
 
-**Course:** Full Stack Web Development  
-**Assignment:** Task 2 — Interactive JavaScript and ReactJS Application Development  
-**Student Developer:** Aathekesavan  
-**Bloom's Taxonomy Levels:** K3 (Apply), K4 (Analyze)  
-**Project Name:** NovaTech Electronics & Tech Store  
-**Repository Directory:** `d:\FS asi\task-2-interactive-react\`  
-**Target Live URL:** `https://<your-username>.github.io/<repo-name>/`  
+**Institution:** SRM Institute of Science and Technology, Trichy Campus  
+**Department:** Department of Computer Science and Engineering  
+**Course:** Full Stack Web Development (Subject Code: 21CSE354T)  
+**Task:** Task 2 — Interactive JavaScript and ReactJS Application Development  
+**Problem Statement:** Problem No. 24 — Online Shopping Cart  
+**Student Name:** Aathekesavan R  
+**Register Number:** RA2411003050015  
+**Program / Section:** B.Tech CSE - A (3rd Year / 5th Semester)  
+**Faculty Coordinator:** Dr. P. Hariharan, AP, CSE  
+**Date of Submission / Assessment:** 01-10-2026  
+**Academic Year:** 2026 – 2027  
+**Official Deliverables:**
+- PDF Report: [Task_2_ReactJS_Project_Report_AK.pdf](file:///d:/FS%20asi/Task_2_ReactJS_Project_Report_AK.pdf)
+- Word Document: [Task_2_ReactJS_Project_Report_AK.docx](file:///d:/FS%20asi/Task_2_ReactJS_Project_Report_AK.docx)
+- Source Repository: `d:\FS asi\task-2-interactive-react\`
 
 ---
 

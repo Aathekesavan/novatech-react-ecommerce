@@ -7,7 +7,7 @@ export default function Products({
   onSelectProduct,
   searchQuery,
   setSearchQuery,
-  selectedCategory,
+  selectedCategory = 'all',
   setSelectedCategory
 }) {
   const { showToast } = useCart();
@@ -17,30 +17,28 @@ export default function Products({
   const [inStockOnly, setInStockOnly] = useState(false);
   const [sortBy, setSortBy] = useState('featured');
 
-  // Handle Brand selection toggle
   const toggleBrand = (brand) => {
-    setSelectedBrands(prev =>
-      prev.includes(brand) ? prev.filter(b => b !== brand) : [...prev, brand]
+    setSelectedBrands((prev) =>
+      prev.includes(brand) ? prev.filter((b) => b !== brand) : [...prev, brand]
     );
   };
 
-  // Reset all filters
   const handleResetFilters = () => {
-    setSelectedCategory('all');
+    if (setSelectedCategory) setSelectedCategory('all');
     setMaxPrice(2000);
     setSelectedBrands([]);
     setMinRating(0);
     setInStockOnly(false);
-    setSearchQuery('');
+    if (setSearchQuery) setSearchQuery('');
     setSortBy('featured');
     showToast('Filters reset to default.');
   };
 
-  // Dynamic Filtering Logic using useMemo (Bloom's Level K4: Analyze)
+  // Filter Algorithm optimized with useMemo
   const filteredProducts = useMemo(() => {
-    return PRODUCTS.filter(product => {
+    let result = PRODUCTS.filter((product) => {
       // 1. Keyword search
-      if (searchQuery.trim()) {
+      if (searchQuery && searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
         const matchesName = product.name.toLowerCase().includes(q);
         const matchesDesc = product.description.toLowerCase().includes(q);
@@ -49,127 +47,161 @@ export default function Products({
         if (!matchesName && !matchesDesc && !matchesBrand && !matchesCat) return false;
       }
 
-      // 2. Category filter
-      if (selectedCategory !== 'all' && product.category !== selectedCategory) {
+      // 2. Department category
+      if (selectedCategory && selectedCategory !== 'all' && product.category !== selectedCategory) {
         return false;
       }
 
-      // 3. Price filter
+      // 3. Price upper ceiling
       if (product.price > maxPrice) {
         return false;
       }
 
-      // 4. Brands filter
+      // 4. Brands checklist
       if (selectedBrands.length > 0 && !selectedBrands.includes(product.brand)) {
         return false;
       }
 
-      // 5. Rating filter
+      // 5. Star rating
       if (minRating > 0 && product.rating < minRating) {
         return false;
       }
 
-      // 6. In Stock filter
+      // 6. In stock
       if (inStockOnly && !product.inStock) {
         return false;
       }
 
       return true;
-    }).sort((a, b) => {
-      // Sorting Logic
-      switch (sortBy) {
-        case 'price-low':
-          return a.price - b.price;
-        case 'price-high':
-          return b.price - a.price;
-        case 'rating':
-          return b.rating - a.rating;
-        case 'newest':
-          return (b.badge === 'new' ? 1 : 0) - (a.badge === 'new' ? 1 : 0);
-        default:
-          return 0; // default order
-      }
     });
+
+    // Dynamic Sorting
+    switch (sortBy) {
+      case 'price-asc':
+        return result.sort((a, b) => a.price - b.price);
+      case 'price-desc':
+        return result.sort((a, b) => b.price - a.price);
+      case 'rating':
+        return result.sort((a, b) => b.rating - a.rating);
+      case 'reviews':
+        return result.sort((a, b) => b.reviewsCount - a.reviewsCount);
+      default:
+        return result;
+    }
   }, [searchQuery, selectedCategory, maxPrice, selectedBrands, minRating, inStockOnly, sortBy]);
 
   return (
-    <div className="container section" style={{ paddingTop: 'var(--space-6)' }}>
-      {/* Breadcrumb */}
-      <nav className="breadcrumb" aria-label="Breadcrumb navigation">
-        <span className="breadcrumb-item">
-          <a href="#home" onClick={(e) => { e.preventDefault(); }}>Home</a>
+    <div className="container" style={{ paddingTop: '16px', paddingBottom: '48px' }}>
+      {/* Amazon Breadcrumb */}
+      <nav style={{ fontSize: '0.8rem', color: '#565959', marginBottom: '16px' }} aria-label="Breadcrumb">
+        <span style={{ color: 'var(--color-link)', cursor: 'pointer' }} onClick={handleResetFilters}>All Electronics</span>
+        <span style={{ margin: '0 6px' }}>&rsaquo;</span>
+        <span style={{ color: '#0f1111' }}>
+          {selectedCategory !== 'all' ? selectedCategory.toUpperCase() : 'All Products'}
         </span>
-        <span className="breadcrumb-separator">/</span>
-        <span className="breadcrumb-item active" aria-current="page">Shop Products</span>
+        {searchQuery && (
+          <>
+            <span style={{ margin: '0 6px' }}>&rsaquo;</span>
+            <span style={{ color: '#0f1111' }}>"{searchQuery}"</span>
+          </>
+        )}
       </nav>
 
-      <div style={{ marginBottom: 'var(--space-8)' }}>
-        <h1>Interactive Product Catalog</h1>
-        <p>
-          Real-time filtering with React state and hooks. Adjust filters below to dynamically filter results with zero page reload.
-        </p>
-      </div>
-
+      {/* Catalog Layout: Left Filter Sidebar + Right Results Grid */}
       <div className="catalog-layout">
-        {/* Interactive Aside Filters */}
-        <aside className="catalog-filter-aside" aria-label="Product Filters">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-            <h2 style={{ fontSize: '1.15rem', marginBottom: 0 }}>Filters</h2>
+        {/* Amazon Left Filter Sidebar */}
+        <aside className="filter-sidebar">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+            <h3 style={{ fontSize: '1rem', fontWeight: 700, margin: 0, color: '#0f1111' }}>
+              Filters
+            </h3>
             <button
+              type="button"
               onClick={handleResetFilters}
-              style={{ fontSize: '0.8rem', color: 'var(--color-primary)', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }}
+              style={{ background: 'none', border: 'none', color: 'var(--color-link)', fontSize: '0.8rem', cursor: 'pointer' }}
             >
-              Reset All
+              Clear all
             </button>
           </div>
 
-          {/* Filter 1: Categories */}
+          {/* Department Filter */}
           <div className="filter-group">
-            <h3 className="filter-title">Department</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-              {CATEGORIES.map(cat => (
-                <label key={cat.id} className="form-check">
+            <div className="filter-title">Department</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.85rem' }}>
+              <label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <input
+                  type="radio"
+                  name="catFilter"
+                  checked={selectedCategory === 'all'}
+                  onChange={() => setSelectedCategory && setSelectedCategory('all')}
+                />
+                <span>All Departments</span>
+              </label>
+              {CATEGORIES.filter((c) => c.id !== 'all').map((c) => (
+                <label key={c.id} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <input
                     type="radio"
-                    name="categoryRadio"
-                    checked={selectedCategory === cat.id}
-                    onChange={() => setSelectedCategory(cat.id)}
+                    name="catFilter"
+                    checked={selectedCategory === c.id}
+                    onChange={() => setSelectedCategory && setSelectedCategory(c.id)}
                   />
-                  <span>{cat.name} ({cat.count})</span>
+                  <span>{c.name}</span>
                 </label>
               ))}
             </div>
           </div>
 
-          {/* Filter 2: Max Price Range */}
+          {/* Customer Reviews Rating Filter */}
           <div className="filter-group">
-            <h3 className="filter-title">Price Range</h3>
-            <div className="form-range-wrap">
-              <input
-                type="range"
-                className="form-range"
-                min="50"
-                max="2000"
-                step="50"
-                value={maxPrice}
-                onChange={(e) => setMaxPrice(Number(e.target.value))}
-              />
-              <div className="range-values">
-                <span>Min: $50</span>
-                <span style={{ fontWeight: 700, color: 'var(--color-primary)' }}>
-                  Max: ${maxPrice.toLocaleString()}
-                </span>
-                <span>$2,000</span>
-              </div>
+            <div className="filter-title">Customer Reviews</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.85rem' }}>
+              <label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <input
+                  type="radio"
+                  name="ratingFilter"
+                  checked={minRating === 4.8}
+                  onChange={() => setMinRating(minRating === 4.8 ? 0 : 4.8)}
+                />
+                <span style={{ color: 'var(--color-star-gold)' }}>★★★★★</span>
+                <span style={{ fontSize: '0.8rem', color: '#565959' }}>& Up (4.8+)</span>
+              </label>
+              <label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <input
+                  type="radio"
+                  name="ratingFilter"
+                  checked={minRating === 4.0}
+                  onChange={() => setMinRating(minRating === 4.0 ? 0 : 4.0)}
+                />
+                <span style={{ color: 'var(--color-star-gold)' }}>★★★★☆</span>
+                <span style={{ fontSize: '0.8rem', color: '#565959' }}>& Up (4.0+)</span>
+              </label>
             </div>
           </div>
 
-          {/* Filter 3: Brands */}
+          {/* Price Range Slider */}
           <div className="filter-group">
-            <h3 className="filter-title">Brands</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-              {BRANDS.map(brand => (
-                <label key={brand} className="form-check">
+            <div className="filter-title">Price Range</div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '6px', color: '#565959' }}>
+              <span>$50</span>
+              <strong style={{ color: '#0f1111' }}>Up to ${maxPrice}</strong>
+            </div>
+            <input
+              type="range"
+              min="50"
+              max="2000"
+              step="50"
+              value={maxPrice}
+              onChange={(e) => setMaxPrice(Number(e.target.value))}
+              style={{ width: '100%', accentColor: 'var(--color-cta-orange)', cursor: 'pointer' }}
+            />
+          </div>
+
+          {/* Brand Checklist */}
+          <div className="filter-group">
+            <div className="filter-title">Brand</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.85rem' }}>
+              {BRANDS.map((brand) => (
+                <label key={brand} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <input
                     type="checkbox"
                     checked={selectedBrands.includes(brand)}
@@ -181,46 +213,10 @@ export default function Products({
             </div>
           </div>
 
-          {/* Filter 4: Customer Rating */}
+          {/* Availability */}
           <div className="filter-group">
-            <h3 className="filter-title">Minimum Rating</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-              <label className="form-check">
-                <input
-                  type="radio"
-                  name="ratingRadio"
-                  checked={minRating === 0}
-                  onChange={() => setMinRating(0)}
-                />
-                <span>All Ratings</span>
-              </label>
-              <label className="form-check">
-                <input
-                  type="radio"
-                  name="ratingRadio"
-                  checked={minRating === 4}
-                  onChange={() => setMinRating(4)}
-                />
-                <span style={{ color: 'var(--color-accent)' }}>★★★★☆</span>
-                <span style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>4.0 & Up</span>
-              </label>
-              <label className="form-check">
-                <input
-                  type="radio"
-                  name="ratingRadio"
-                  checked={minRating === 4.8}
-                  onChange={() => setMinRating(4.8)}
-                />
-                <span style={{ color: 'var(--color-accent)' }}>★★★★★</span>
-                <span style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>4.8 & Up</span>
-              </label>
-            </div>
-          </div>
-
-          {/* Filter 5: Availability */}
-          <div className="filter-group">
-            <h3 className="filter-title">Availability</h3>
-            <label className="form-check">
+            <div className="filter-title">Availability</div>
+            <label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem' }}>
               <input
                 type="checkbox"
                 checked={inStockOnly}
@@ -229,49 +225,38 @@ export default function Products({
               <span>In Stock Only</span>
             </label>
           </div>
-
-          <button
-            className="btn btn-primary btn-block"
-            style={{ marginTop: '1rem' }}
-            onClick={() => showToast(`Showing ${filteredProducts.length} matching products.`)}
-          >
-            Apply Active Filters ({filteredProducts.length})
-          </button>
         </aside>
 
-        {/* Product Catalog Grid */}
-        <section className="product-catalog-content" aria-label="Available Products">
-          {/* Toolbar */}
-          <div className="catalog-toolbar">
-            <div className="catalog-count-text">
-              Showing <span className="catalog-count-bold">{filteredProducts.length}</span> of{' '}
-              <span className="catalog-count-bold">{PRODUCTS.length}</span> products
-              {searchQuery && <span> matching "<em>{searchQuery}</em>"</span>}
+        {/* Right Product Results */}
+        <div>
+          {/* Results Header with Count & Sort Selector */}
+          <div className="catalog-results-header">
+            <div className="catalog-count">
+              Showing <strong>{filteredProducts.length}</strong> of <strong>{PRODUCTS.length}</strong> results
+              {selectedCategory !== 'all' && <span> in <strong>{selectedCategory}</strong></span>}
             </div>
 
-            <div className="catalog-sort-wrap">
-              <label htmlFor="sort-select" style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>
-                Sort By:
-              </label>
+            <div className="catalog-sort-box">
+              <label htmlFor="catalog-sort-select">Sort by:</label>
               <select
-                id="sort-select"
+                id="catalog-sort-select"
                 className="catalog-sort-select"
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
               >
-                <option value="featured">Featured Picks</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-                <option value="rating">Highest Rated</option>
-                <option value="newest">Newest Arrivals</option>
+                <option value="featured">Featured Deals</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+                <option value="rating">Avg. Customer Review</option>
+                <option value="reviews">Most Reviewed</option>
               </select>
             </div>
           </div>
 
-          {/* Products Grid or Empty State */}
+          {/* Products Grid */}
           {filteredProducts.length > 0 ? (
-            <div className="grid grid-cols-3">
-              {filteredProducts.map(product => (
+            <div className="product-grid" style={{ marginBottom: 0 }}>
+              {filteredProducts.map((product) => (
                 <ProductCard
                   key={product.id}
                   product={product}
@@ -280,16 +265,30 @@ export default function Products({
               ))}
             </div>
           ) : (
-            <div style={{ textAlign: 'center', padding: '4rem 2rem', background: '#ffffff', borderRadius: '12px', border: '1px solid var(--color-border)' }}>
-              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🔍</div>
-              <h3>No matching products found</h3>
-              <p>Try adjusting your search query, increasing the price range, or clearing category filters.</p>
-              <button className="btn btn-primary" onClick={handleResetFilters} style={{ marginTop: '1rem' }}>
+            <div style={{
+              backgroundColor: '#ffffff',
+              border: '1px solid var(--color-border)',
+              borderRadius: 'var(--radius-sm)',
+              padding: '48px 24px',
+              textAlign: 'center'
+            }}>
+              <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>🔍</div>
+              <h3 style={{ fontSize: '1.25rem', marginBottom: '8px', color: '#0f1111' }}>
+                No matching electronics found
+              </h3>
+              <p style={{ color: '#565959', fontSize: '0.85rem', marginBottom: '16px' }}>
+                Try relaxing your price slider, unchecking brands, or clearing the search keyword.
+              </p>
+              <button
+                type="button"
+                className="btn btn-cart-yellow"
+                onClick={handleResetFilters}
+              >
                 Reset All Filters
               </button>
             </div>
           )}
-        </section>
+        </div>
       </div>
     </div>
   );
