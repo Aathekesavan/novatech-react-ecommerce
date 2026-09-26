@@ -96,7 +96,7 @@ export default function Cart({ setActivePage }) {
             Check your Saved items or browse our featured electronics deals.
           </p>
           <button
-            className="btn btn-cart-yellow btn-lg"
+            className="btn btn-primary btn-lg"
             onClick={() => setActivePage('products')}
           >
             Continue Shopping &rarr;
@@ -138,11 +138,11 @@ export default function Cart({ setActivePage }) {
                   }}
                 >
                   {/* Thumbnail */}
-                  <div style={{ width: '100px', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{ width: '100px', height: '80px', borderRadius: '8px', overflow: 'hidden', background: '#f1f5f9' }}>
                     <img
                       src={item.image}
                       alt={item.name}
-                      style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
                   </div>
 
@@ -303,14 +303,13 @@ export default function Cart({ setActivePage }) {
               </div>
             </div>
 
-            {/* Yellow Proceed to Buy Button */}
+            {/* Modern Proceed to Checkout Button */}
             <button
               type="button"
-              className="btn btn-cart-yellow btn-block"
-              style={{ padding: '10px', fontSize: '0.95rem' }}
+              className="btn btn-primary btn-block btn-lg"
               onClick={() => setIsCheckoutModalOpen(true)}
             >
-              Proceed to Buy
+              Proceed to Checkout &rarr;
             </button>
 
             {/* Guarantee Details */}
@@ -530,8 +529,8 @@ export default function Cart({ setActivePage }) {
                     <span style={{ fontSize: '0.8rem', color: '#565959' }}>Order Total: </span>
                     <strong style={{ fontSize: '1.25rem', color: 'var(--color-deal-red)' }}>₹{total.toLocaleString('en-IN')}</strong>
                   </div>
-                  <button type="submit" className="btn btn-orange btn-lg">
-                    Place Your Order
+                  <button type="submit" className="btn btn-primary btn-lg">
+                    Place Your Order &rarr;
                   </button>
                 </div>
               </form>
@@ -551,7 +550,7 @@ export default function Cart({ setActivePage }) {
                 </div>
                 <button
                   type="button"
-                  className="btn btn-cart-yellow"
+                  className="btn btn-primary"
                   onClick={() => {
                     setIsCheckoutModalOpen(false);
                     setOrderPlaced(false);

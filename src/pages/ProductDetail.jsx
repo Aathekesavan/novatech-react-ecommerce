@@ -13,7 +13,6 @@ export default function ProductDetail({ productId = 'prod-1', setActivePage, onS
   const [selectedColor, setSelectedColor] = useState(product.colors?.[0] || 'Standard');
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('specs');
-  const [deliveryPincode, setDeliveryPincode] = useState('600001');
 
   useEffect(() => {
     setSelectedImage(product.image);
@@ -33,281 +32,212 @@ export default function ProductDetail({ productId = 'prod-1', setActivePage, onS
   const relatedProducts = PRODUCTS.filter((p) => p.id !== product.id).slice(0, 4);
 
   return (
-    <div className="container" style={{ paddingTop: '16px', paddingBottom: '40px' }}>
-      {/* Amazon Breadcrumb */}
-      <nav style={{ fontSize: '0.8rem', color: '#565959', marginBottom: '16px' }} aria-label="Breadcrumb">
-        <a href="#home" onClick={(e) => { e.preventDefault(); setActivePage('home'); }} style={{ color: 'var(--color-link)' }}>Electronics</a>
-        <span style={{ margin: '0 6px' }}>&rsaquo;</span>
-        <a href="#products" onClick={(e) => { e.preventDefault(); setActivePage('products'); }} style={{ color: 'var(--color-link)' }}>{product.categoryLabel}</a>
-        <span style={{ margin: '0 6px' }}>&rsaquo;</span>
-        <span style={{ color: '#0f1111' }}>{product.name}</span>
+    <div className="container" style={{ paddingTop: '24px', paddingBottom: '48px' }}>
+      {/* Modern Breadcrumb */}
+      <nav style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '20px' }} aria-label="Breadcrumb">
+        <a href="#home" onClick={(e) => { e.preventDefault(); setActivePage('home'); }} style={{ color: 'var(--color-brand)', textDecoration: 'none' }}>Home</a>
+        <span style={{ margin: '0 8px' }}>/</span>
+        <a href="#products" onClick={(e) => { e.preventDefault(); setActivePage('products'); }} style={{ color: 'var(--color-brand)', textDecoration: 'none' }}>{product.categoryLabel}</a>
+        <span style={{ margin: '0 8px' }}>/</span>
+        <span style={{ color: '#0f172a', fontWeight: 600 }}>{product.name}</span>
       </nav>
 
-      {/* Amazon 3-Column Product Detail Layout */}
-      <div className="detail-layout-amazon">
-        {/* Column 1: Gallery */}
-        <div className="detail-gallery-col">
-          <div className="detail-thumbs-list">
-            {product.thumbnails?.map((thumb, idx) => (
-              <button
-                key={idx}
-                type="button"
-                className={`detail-thumb-btn ${selectedImage === thumb ? 'active' : ''}`}
-                onClick={() => setSelectedImage(thumb)}
-                aria-label={`View angle ${idx + 1}`}
-              >
-                <img src={thumb} alt="" className="detail-thumb-img" />
-              </button>
-            ))}
-          </div>
-
-          <div className="detail-main-img-box">
-            <img
-              src={selectedImage}
-              alt={product.name}
-              className="detail-main-img"
-            />
-          </div>
-        </div>
-
-        {/* Column 2: Product Information & Specifications */}
-        <div className="detail-center-col">
-          <a
-            href="#products"
-            className="detail-brand-link"
-            onClick={(e) => { e.preventDefault(); setActivePage('products'); }}
-          >
-            Visit the {product.brand || 'NovaTech'} Store
-          </a>
-
-          <h1 className="detail-title">{product.name}</h1>
-
-          {/* Star Ratings + Review Count */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-            <StarRating rating={product.rating} reviewsCount={product.reviewsCount} />
-            <span style={{ color: '#007185', fontSize: '0.85rem' }}>| 124 answered questions</span>
-          </div>
-
-          {/* Badge */}
-          {product.badge && (
-            <div style={{ marginBottom: '12px' }}>
-              <span className="badge badge-choice">
-                Nova<span className="badge-accent">Choice</span> for "{product.categoryLabel}"
-              </span>
+      {/* Modern Split Product Detail View */}
+      <div className="product-detail-view">
+        <div className="product-detail-grid">
+          {/* Left: Gallery with Real Photography */}
+          <div>
+            <div className="detail-gallery-main">
+              <img
+                src={selectedImage}
+                alt={product.name}
+                className="detail-main-img"
+              />
             </div>
-          )}
+            <div className="detail-thumbs-strip">
+              {product.thumbnails?.map((thumb, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  className={`detail-thumb-btn ${selectedImage === thumb ? 'active' : ''}`}
+                  onClick={() => setSelectedImage(thumb)}
+                  aria-label={`View photo ${idx + 1}`}
+                >
+                  <img src={thumb} alt="" className="detail-thumb-img" />
+                </button>
+              ))}
+            </div>
+          </div>
 
-          <hr style={{ border: 'none', borderTop: '1px solid #e7e7e7', margin: '8px 0 16px' }} />
+          {/* Right: Specifications & Modern Buy Box */}
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+              <span style={{ textTransform: 'uppercase', letterSpacing: '0.08em', fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-brand)' }}>
+                {product.brand || 'NovaTech'}
+              </span>
+              <span className="badge badge-primary">Staff Pick</span>
+            </div>
 
-          {/* Price Box */}
-          <div style={{ marginBottom: '16px' }}>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-              {discountPercent > 0 && (
-                <span style={{ color: 'var(--color-deal-red)', fontSize: '1.75rem', fontWeight: 300 }}>
-                  -{discountPercent}%
+            <h1 style={{ fontSize: '1.85rem', fontWeight: 800, color: '#0f172a', lineHeight: 1.3, marginBottom: '12px' }}>
+              {product.name}
+            </h1>
+
+            {/* Ratings */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
+              <StarRating rating={product.rating} reviewsCount={product.reviewsCount} />
+              <span style={{ color: '#64748b', fontSize: '0.85rem' }}>• Verified Customer Purchase</span>
+            </div>
+
+            {/* Price Box */}
+            <div style={{ background: '#f8fafc', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-lg)', padding: '16px', marginBottom: '20px' }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px' }}>
+                <span style={{ fontSize: '2rem', fontWeight: 800, color: '#0f172a' }}>
+                  ₹{product.price.toLocaleString('en-IN')}
                 </span>
-              )}
-              <span style={{ fontSize: '1.85rem', fontWeight: 700, color: '#0f1111' }}>
-                <span style={{ fontSize: '0.65em', verticalAlign: 'top' }}>₹</span>
-                {product.price.toLocaleString('en-IN')}
-              </span>
+                {product.originalPrice && (
+                  <>
+                    <span style={{ fontSize: '1rem', color: '#94a3b8', textDecoration: 'line-through' }}>
+                      ₹{product.originalPrice.toLocaleString('en-IN')}
+                    </span>
+                    <span className="badge-discount-tag">
+                      Save ₹{(product.originalPrice - product.price).toLocaleString('en-IN')} ({discountPercent}% OFF)
+                    </span>
+                  </>
+                )}
+              </div>
+              <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '6px' }}>
+                Inclusive of 18% GST • Complimentary Express Shipping Across India
+              </div>
             </div>
-            {product.originalPrice && (
-              <div style={{ fontSize: '0.85rem', color: '#565959', marginTop: '2px' }}>
-                Typical price: <span style={{ textDecoration: 'line-through' }}>₹{product.originalPrice.toLocaleString('en-IN')}</span>
+
+            {/* Color Finish Picker */}
+            {product.colors && (
+              <div style={{ marginBottom: '20px' }}>
+                <div style={{ fontSize: '0.875rem', fontWeight: 700, marginBottom: '8px', color: '#0f172a' }}>
+                  Select Finish: <span style={{ fontWeight: 500, color: 'var(--color-brand)' }}>{selectedColor}</span>
+                </div>
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  {product.colors.map((color) => (
+                    <button
+                      key={color}
+                      type="button"
+                      onClick={() => setSelectedColor(color)}
+                      style={{
+                        padding: '8px 16px',
+                        borderRadius: '9999px',
+                        border: selectedColor === color ? '2px solid var(--color-brand)' : '1px solid var(--color-border)',
+                        backgroundColor: selectedColor === color ? 'var(--color-brand-light)' : '#ffffff',
+                        color: selectedColor === color ? 'var(--color-brand)' : '#0f172a',
+                        fontSize: '0.85rem',
+                        fontWeight: 600,
+                        cursor: 'pointer'
+                      }}
+                    >
+                      {color}
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
-            <div style={{ fontSize: '0.8rem', color: '#565959', marginTop: '4px' }}>
-              Inclusive of all taxes. Free shipping on this item.
-            </div>
-          </div>
 
-          {/* Bank Offers Callout Box (Real Amazon Style) */}
-          <div className="bank-offers-box">
-            <div className="bank-offers-title">
-              <span>🏷️</span> Bank Offers & Partner Discounts
-            </div>
-            <div className="bank-offers-text">
-              <strong>10% Instant Discount</strong> up to ₹1,500 on HDFC / ICICI Bank Credit Cards.
-              <br />
-              <strong>No-Cost EMI:</strong> Avail No Cost EMI on select cards for orders above ₹5,000.
-            </div>
-          </div>
-
-          {/* Color Finish Picker */}
-          {product.colors && (
-            <div style={{ marginBottom: '20px' }}>
-              <div style={{ fontSize: '0.85rem', fontWeight: 600, marginBottom: '8px', color: '#0f1111' }}>
-                Color Finish: <span style={{ fontWeight: 400, color: '#565959' }}>{selectedColor}</span>
-              </div>
-              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                {product.colors.map((color) => (
+            {/* Modern Buy Box Controls */}
+            <div className="detail-buy-box">
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+                <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#0f172a' }}>Select Quantity:</span>
+                <div className="quantity-stepper">
                   <button
-                    key={color}
                     type="button"
-                    onClick={() => setSelectedColor(color)}
-                    style={{
-                      padding: '6px 14px',
-                      borderRadius: '4px',
-                      border: selectedColor === color ? '2px solid var(--color-cta-orange)' : '1px solid #d5d9d9',
-                      backgroundColor: selectedColor === color ? '#fff8f0' : '#ffffff',
-                      fontSize: '0.85rem',
-                      fontWeight: selectedColor === color ? 700 : 500,
-                      cursor: 'pointer'
-                    }}
+                    className="stepper-btn"
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
                   >
-                    {color}
+                    -
                   </button>
-                ))}
+                  <input
+                    type="text"
+                    readOnly
+                    className="stepper-input"
+                    value={quantity}
+                  />
+                  <button
+                    type="button"
+                    className="stepper-btn"
+                    onClick={() => setQuantity(quantity + 1)}
+                  >
+                    +
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
 
-          {/* About this Item */}
-          <div style={{ marginBottom: '20px' }}>
-            <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '8px', color: '#0f1111' }}>
-              About this item
-            </h3>
-            <p style={{ fontSize: '0.875rem', color: '#333333', lineHeight: 1.6, marginBottom: '12px' }}>
-              {product.description}
-            </p>
-            <ul style={{ paddingLeft: '20px', fontSize: '0.85rem', color: '#333333', lineHeight: 1.6 }}>
-              <li>{product.tagline}</li>
-              <li>High-durability build backed by NovaTech 2-Year Official Comprehensive Warranty.</li>
-              <li>Engineered for professional content creators, developers, and daily power users.</li>
-            </ul>
-          </div>
-        </div>
-
-        {/* Column 3: Amazon Sticky Buy Box */}
-        <div>
-          <div className="sticky-buy-box">
-            <div className="buy-box-price">
-              ₹{(product.price * quantity).toLocaleString('en-IN')}
-            </div>
-
-            <div className="buy-box-delivery">
-              <span className="badge-prime" style={{ marginRight: '6px' }}>Prime</span>
-              <span>FREE delivery <strong>Tomorrow, 27 Sept</strong>.</span>
-              <br />
-              <span style={{ fontSize: '0.8rem', color: '#565959' }}>
-                Order within <strong>4 hrs 12 mins</strong>.
-              </span>
-            </div>
-
-            <div style={{ fontSize: '0.8rem', color: '#007185', marginBottom: '12px', cursor: 'pointer' }}>
-              📍 Deliver to Chennai {deliveryPincode}
-            </div>
-
-            <div className="buy-box-stock">In Stock</div>
-
-            {/* Quantity Dropdown */}
-            <div style={{ marginBottom: '16px' }}>
-              <label htmlFor="buybox-quantity" style={{ fontSize: '0.85rem', fontWeight: 600, display: 'block', marginBottom: '4px' }}>
-                Quantity:
-              </label>
-              <select
-                id="buybox-quantity"
-                className="buy-box-qty-select"
-                value={quantity}
-                onChange={(e) => setQuantity(Number(e.target.value))}
-              >
-                {[1, 2, 3, 4, 5, 10].map((num) => (
-                  <option key={num} value={num}>
-                    {num}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* CTA Buttons: Yellow Add to Cart & Orange Buy Now */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <button
-                type="button"
-                className="btn btn-cart-yellow btn-block"
-                onClick={() => addToCart(product, quantity, selectedColor)}
-              >
-                Add to Cart
-              </button>
-              <button
-                type="button"
-                className="btn btn-orange btn-block"
-                onClick={handleBuyNow}
-              >
-                Buy Now
-              </button>
-            </div>
-
-            {/* Guarantee Details */}
-            <div style={{ fontSize: '0.75rem', color: '#565959', marginTop: '16px', lineHeight: 1.6, borderTop: '1px solid #e7e7e7', paddingTop: '12px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span>Ships from</span>
-                <strong style={{ color: '#0f1111' }}>NovaTech Logistics</strong>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <button
+                  type="button"
+                  className="btn btn-primary btn-lg"
+                  onClick={() => addToCart(product, quantity, selectedColor)}
+                >
+                  Add to Cart
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-secondary btn-lg"
+                  onClick={handleBuyNow}
+                >
+                  Buy Now &rarr;
+                </button>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span>Sold by</span>
-                <strong style={{ color: '#0f1111' }}>NovaTech Official</strong>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span>Returns</span>
-                <strong style={{ color: '#007185' }}>7-day Replacement</strong>
-              </div>
-            </div>
 
-            <div className="buy-box-security">
-              <span>🔒 Secure transaction</span>
+              <div style={{ marginTop: '16px', display: 'flex', gap: '16px', fontSize: '0.8rem', color: '#64748b' }}>
+                <span>⚡ 24h Express Dispatch</span>
+                <span>🛡️ 2-Year NovaCare Warranty</span>
+                <span>🔄 30-Day Free Returns</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Specifications & Overview Tabs */}
-      <div style={{ background: '#ffffff', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', padding: '24px', marginBottom: '32px' }}>
-        <div style={{ display: 'flex', borderBottom: '1px solid #e7e7e7', marginBottom: '20px' }}>
+      <div style={{
+        background: '#ffffff',
+        border: '1px solid var(--color-border)',
+        borderRadius: 'var(--radius-xl)',
+        padding: '28px',
+        marginBottom: '36px',
+        boxShadow: 'var(--shadow-card)'
+      }}>
+        <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--color-border)', paddingBottom: '12px', marginBottom: '24px' }}>
           <button
             type="button"
+            className={`btn ${activeTab === 'specs' ? 'btn-primary' : 'btn-outline'} btn-sm`}
             onClick={() => setActiveTab('specs')}
-            style={{
-              padding: '10px 20px',
-              border: 'none',
-              borderBottom: activeTab === 'specs' ? '3px solid var(--color-cta-orange)' : '3px solid transparent',
-              background: 'none',
-              fontWeight: activeTab === 'specs' ? 700 : 500,
-              color: activeTab === 'specs' ? '#0f1111' : '#565959',
-              cursor: 'pointer',
-              fontSize: '0.95rem'
-            }}
           >
             Technical Specifications
           </button>
           <button
             type="button"
+            className={`btn ${activeTab === 'overview' ? 'btn-primary' : 'btn-outline'} btn-sm`}
+            onClick={() => setActiveTab('overview')}
+          >
+            Product Overview
+          </button>
+          <button
+            type="button"
+            className={`btn ${activeTab === 'reviews' ? 'btn-primary' : 'btn-outline'} btn-sm`}
             onClick={() => setActiveTab('reviews')}
-            style={{
-              padding: '10px 20px',
-              border: 'none',
-              borderBottom: activeTab === 'reviews' ? '3px solid var(--color-cta-orange)' : '3px solid transparent',
-              background: 'none',
-              fontWeight: activeTab === 'reviews' ? 700 : 500,
-              color: activeTab === 'reviews' ? '#0f1111' : '#565959',
-              cursor: 'pointer',
-              fontSize: '0.95rem'
-            }}
           >
             Customer Reviews ({product.reviewsCount})
           </button>
         </div>
 
         {activeTab === 'specs' && (
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
             <tbody>
-              {product.specs && Object.entries(product.specs).map(([specKey, specVal], idx) => (
-                <tr key={specKey} style={{ backgroundColor: idx % 2 === 0 ? '#f7fafa' : '#ffffff' }}>
-                  <td style={{ padding: '10px 16px', fontWeight: 600, width: '35%', color: '#0f1111', borderBottom: '1px solid #e7e7e7' }}>
-                    {specKey}
+              {Object.entries(product.specs || {}).map(([key, val], idx) => (
+                <tr key={key} style={{ backgroundColor: idx % 2 === 0 ? '#f8fafc' : '#ffffff' }}>
+                  <td style={{ padding: '12px 16px', fontWeight: 700, width: '35%', color: '#0f172a', borderBottom: '1px solid var(--color-border)' }}>
+                    {key}
                   </td>
-                  <td style={{ padding: '10px 16px', color: '#565959', borderBottom: '1px solid #e7e7e7' }}>
-                    {specVal}
+                  <td style={{ padding: '12px 16px', color: '#475569', borderBottom: '1px solid var(--color-border)' }}>
+                    {val}
                   </td>
                 </tr>
               ))}
@@ -315,40 +245,32 @@ export default function ProductDetail({ productId = 'prod-1', setActivePage, onS
           </table>
         )}
 
+        {activeTab === 'overview' && (
+          <div style={{ lineHeight: 1.7, color: '#334155' }}>
+            <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '12px', color: '#0f172a' }}>
+              Engineered with Precision Architecture
+            </h3>
+            <p style={{ marginBottom: '16px' }}>{product.description}</p>
+            <p>Every unit undergoes strict quality validation, acoustic isolation testing, and factory burn-in to ensure 100% compliance with NovaTech audio and electronics standards.</p>
+          </div>
+        )}
+
         {activeTab === 'reviews' && (
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
-              <div style={{ fontSize: '2.5rem', fontWeight: 800, color: '#0f1111' }}>
-                {product.rating}
-              </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px' }}>
+              <span style={{ fontSize: '3rem', fontWeight: 800, color: '#0f172a' }}>{product.rating}</span>
               <div>
                 <StarRating rating={product.rating} />
-                <div style={{ fontSize: '0.85rem', color: '#565959', marginTop: '4px' }}>
-                  Based on {product.reviewsCount} global verified ratings
-                </div>
+                <span style={{ fontSize: '0.85rem', color: '#64748b', display: 'block', marginTop: '4px' }}>
+                  Based on {product.reviewsCount} verified customer ratings
+                </span>
               </div>
             </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div style={{ borderBottom: '1px solid #e7e7e7', paddingBottom: '12px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                  <span style={{ fontWeight: 700, fontSize: '0.875rem' }}>Arun K. (Verified Purchase)</span>
-                  <span style={{ fontSize: '0.75rem', color: '#565959' }}>• Reviewed on 20 Sept 2026</span>
-                </div>
-                <div style={{ color: 'var(--color-star-gold)', fontSize: '0.85rem', marginBottom: '4px' }}>★★★★★</div>
-                <p style={{ fontSize: '0.85rem', color: '#333333', margin: 0 }}>
-                  Exceptional soundstage and noise cancelling. Delivered within 24 hours in pristine condition!
-                </p>
-              </div>
-
-              <div style={{ borderBottom: '1px solid #e7e7e7', paddingBottom: '12px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                  <span style={{ fontWeight: 700, fontSize: '0.875rem' }}>Sneha M. (Verified Purchase)</span>
-                  <span style={{ fontSize: '0.75rem', color: '#565959' }}>• Reviewed on 14 Sept 2026</span>
-                </div>
-                <div style={{ color: 'var(--color-star-gold)', fontSize: '0.85rem', marginBottom: '4px' }}>★★★★★</div>
-                <p style={{ fontSize: '0.85rem', color: '#333333', margin: 0 }}>
-                  Build quality is premium. Battery life easily exceeded 40 hours with ANC activated.
+            <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: '16px' }}>
+              <div style={{ marginBottom: '16px' }}>
+                <strong style={{ display: 'block', color: '#0f172a' }}>Aditya R. — ★★★★★ Outstanding Build & Acoustics</strong>
+                <p style={{ margin: '4px 0', fontSize: '0.875rem', color: '#475569' }}>
+                  Exceeded expectations. The build quality, battery endurance, and instant pairing work seamlessly. Delivered within 24 hours in Chennai!
                 </p>
               </div>
             </div>
@@ -356,12 +278,12 @@ export default function ProductDetail({ productId = 'prod-1', setActivePage, onS
         )}
       </div>
 
-      {/* Related Products Shelf */}
-      <section style={{ background: '#ffffff', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', padding: '20px' }}>
-        <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '16px', color: '#0f1111' }}>
-          Customers who viewed this item also viewed
-        </h3>
-        <div className="product-grid" style={{ marginBottom: 0 }}>
+      {/* Related Products */}
+      <section>
+        <h2 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '20px', color: '#0f172a' }}>
+          Customers Also Evaluated
+        </h2>
+        <div className="grid grid-cols-4" style={{ gap: '20px' }}>
           {relatedProducts.map((p) => (
             <ProductCard
               key={p.id}

@@ -192,7 +192,7 @@ export default function Products({
               step="1000"
               value={maxPrice}
               onChange={(e) => setMaxPrice(Number(e.target.value))}
-              style={{ width: '100%', accentColor: 'var(--color-cta-orange)', cursor: 'pointer' }}
+              style={{ width: '100%', accentColor: 'var(--color-brand)', cursor: 'pointer' }}
             />
           </div>
 

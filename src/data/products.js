@@ -3,14 +3,14 @@
  * Used for Task 2 Interactive React State & Dynamic Filtering
  */
 
-import headphonesImg from '../assets/images/headphones.svg';
-import smartwatchImg from '../assets/images/smartwatch.svg';
-import laptopImg from '../assets/images/laptop.svg';
-import earbudsImg from '../assets/images/earbuds.svg';
-import speakerImg from '../assets/images/speaker.svg';
-import cameraImg from '../assets/images/camera.svg';
-import keyboardImg from '../assets/images/keyboard.svg';
-import droneImg from '../assets/images/drone.svg';
+import headphonesImg from '../assets/images/headphones.jpg';
+import smartwatchImg from '../assets/images/smartwatch.jpg';
+import laptopImg from '../assets/images/laptop.jpg';
+import earbudsImg from '../assets/images/earbuds.jpg';
+import speakerImg from '../assets/images/speaker.jpg';
+import cameraImg from '../assets/images/camera.jpg';
+import keyboardImg from '../assets/images/keyboard.jpg';
+import droneImg from '../assets/images/drone.jpg';
 
 export const PRODUCTS = [
   {
